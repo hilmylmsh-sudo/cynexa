@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cynexa System | Industrial SaaS Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:      #060B18;
+  --navy-2:    #0A1120;
+  --navy-3:    #0F1729;
+  --panel:     #111827;
+  --panel-2:   #141E2E;
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(14,165,233,0.25);
+  --teal:      #0EA5E9;
+  --cyan:      #06B6D4;
+  --teal-dim:  rgba(14,165,233,0.12);
+  --teal-glow: rgba(14,165,233,0.18);
+  --green:     #10B981;
+  --amber:     #F59E0B;
+  --red:       #EF4444;
+  --white:     #ffffff;
+  --text-1:    #F1F5F9;
+  --text-2:    #94A3B8;
+  --text-3:    #4B5563;
+  --mono:      'DM Mono', monospace;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--navy);
+  color:var(--text-1);
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:.6;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--teal-dim);border-radius:4px}
+
+/* ═══════════════════════════════════════
+   GLASS NAV
+═══════════════════════════════════════ */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:500;
+  padding:0 40px;
+  height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(6,11,24,0.55);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+nav.scrolled{background:rgba(6,11,24,0.88)}
+
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-weight:900;font-size:1.15rem;letter-spacing:-.5px;
+  color:var(--white);text-decoration:none;
+}
+.logo-mark{
+  width:30px;height:30px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-mark svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
+.logo span{color:var(--teal)}
+
+.nav-links{
+  display:flex;gap:32px;list-style:none;
+}
+.nav-links a{
+  text-decoration:none;color:var(--text-2);
+  font-size:.875rem;font-weight:500;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--text-1)}
+
+.nav-actions{display:flex;gap:10px;align-items:center}
+
+.btn-ghost{
+  padding:8px 18px;border-radius:8px;
+  border:1px solid var(--border);
+  color:var(--text-2);font-size:.85rem;font-weight:600;
+  text-decoration:none;background:transparent;
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--border-hi);color:var(--teal)}
+
+.btn-nav{
+  padding:9px 20px;border-radius:8px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:white;font-size:.85rem;font-weight:700;
+  text-decoration:none;
+  box-shadow:0 0 20px rgba(14,165,233,.25);
+  transition:opacity .2s,transform .15s;
+}
+.btn-nav:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  padding:140px 40px 100px;
+  position:relative;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+
+/* grid lines */
+#hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(14,165,233,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(14,165,233,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 60% at 60% 50%,black 0%,transparent 100%);
+}
+
+/* corner accent lines */
+#hero::after{
+  content:'';position:absolute;
+  top:0;right:0;
+  width:1px;height:200px;
+  background:linear-gradient(to bottom,transparent,var(--teal),transparent);
+  opacity:.4;
+}
+
+.hero-glow-a{
+  position:absolute;top:-200px;right:-100px;
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(14,165,233,.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-glow-b{
+  position:absolute;bottom:-200px;left:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(6,182,212,.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+.hero-inner{
+  max-width:1200px;margin:auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  position:relative;z-index:2;
+}
+
+/* status pill */
+.status-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(16,185,129,.1);
+  border:1px solid rgba(16,185,129,.2);
+  color:#10B981;
+  padding:5px 14px;border-radius:100px;
+  font-size:.72rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:28px;
+  font-family:var(--mono);
+}
+.pulse{
+  width:7px;height:7px;border-radius:50%;
+  background:#10B981;
+  box-shadow:0 0 0 0 rgba(16,185,129,.5);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}
+  70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+}
+
+.hero-eyebrow{
+  font-family:var(--mono);
+  font-size:.72rem;color:var(--teal);
+  letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:16px;opacity:.8;
+}
+
+h1.hero-h1{
+  font-size:clamp(2.4rem,4.2vw,3.8rem);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:-1.5px;
+  color:var(--white);
+  margin-bottom:24px;
+}
+.h1-gradient{
+  background:linear-gradient(135deg,var(--teal) 0%,var(--cyan) 50%,#a78bfa 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub{
+  color:var(--text-2);font-size:1rem;
+  line-height:1.8;max-width:460px;
+  margin-bottom:40px;
+}
+
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:white;font-weight:700;font-size:.95rem;
+  text-decoration:none;
+  box-shadow:0 8px 32px rgba(14,165,233,.3),0 0 0 1px rgba(14,165,233,.2);
+  transition:all .2s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(14,165,233,.4)}
+.btn-primary svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  color:var(--text-2);font-weight:600;font-size:.95rem;
+  text-decoration:none;
+  transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--border-hi);color:var(--text-1);background:rgba(14,165,233,.05)}
+.btn-secondary svg{width:15px;height:15px;stroke:currentColor;stroke-width:2}
+
+/* micro stats */
+.hero-stats{
+  display:flex;gap:40px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+.h-stat-num{
+  font-size:1.7rem;font-weight:900;color:var(--white);
+  letter-spacing:-1px;line-height:1;
+}
+.h-stat-num span{color:var(--teal)}
+.h-stat-lbl{
+  font-size:.72rem;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.07em;font-weight:600;
+  margin-top:4px;
+}
+
+/* ── Dashboard Mock ── */
+.hero-visual{position:relative}
+
+.dash-shell{
+  background:linear-gradient(145deg,rgba(17,24,39,.9),rgba(10,17,32,.95));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(14,165,233,.08),
+    0 40px 80px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);
+}
+
+.dash-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.2);
+}
+.dash-dots{display:flex;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#EF4444;opacity:.7}
+.dot-a{background:#F59E0B;opacity:.7}
+.dot-g{background:#10B981;opacity:.7}
+.dash-title-bar{
+  font-family:var(--mono);
+  font-size:.72rem;color:var(--text-3);
+}
+.dash-live-chip{
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--green);
+  background:rgba(16,185,129,.1);
+  border:1px solid rgba(16,185,129,.15);
+  padding:3px 9px;border-radius:100px;
+}
+
+.dash-body{padding:20px}
+
+.kpi-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;margin-bottom:16px;
+}
+.kpi{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:14px;
+}
+.kpi-lbl{font-size:.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:-0.5px}
+.kpi-delta{font-size:.65rem;font-weight:600;margin-top:3px;display:flex;align-items:center;gap:3px}
+.kpi-delta svg{width:10px;height:10px;stroke-width:3}
+.up{color:var(--green)}.warn{color:var(--amber)}.down{color:var(--red)}
+
+.chart-area{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.chart-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.chart-name{font-size:.78rem;font-weight:700;color:var(--text-1)}
+.chart-period{font-family:var(--mono);font-size:.63rem;color:var(--text-3)}
+
+.bar-chart{
+  display:flex;align-items:flex-end;gap:5px;
+  height:64px;
+}
+.bar{
+  flex:1;border-radius:4px 4px 0 0;
+  background:linear-gradient(to top,var(--teal),rgba(6,182,212,.4));
+  opacity:.7;transition:opacity .2s;min-width:0;
+}
+.bar:hover{opacity:1}
+.bar.active{opacity:1;background:linear-gradient(to top,var(--teal),var(--cyan))}
+
+.prog-list{display:flex;flex-direction:column;gap:9px}
+.prog-item{}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-name{font-size:.72rem;color:var(--text-2)}
+.prog-pct{font-size:.72rem;font-weight:700;font-family:var(--mono);color:var(--text-1)}
+.prog-track{height:4px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--teal),var(--cyan))}
+
+/* floating notification cards */
+.notif{
+  position:absolute;
+  background:rgba(15,23,41,.95);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.notif-1{top:-18px;right:-24px;animation:floatA 4s ease-in-out infinite}
+.notif-2{bottom:24px;left:-32px;animation:floatB 4s ease-in-out infinite}
+
+@keyframes floatA{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(-1deg)}}
+@keyframes floatB{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+
+.notif-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.notif-icon.ni-green{background:rgba(16,185,129,.15)}
+.notif-icon.ni-amber{background:rgba(245,158,11,.15)}
+.notif-icon svg{width:14px;height:14px;stroke-width:2.5}
+.notif-icon.ni-green svg{stroke:var(--green)}
+.notif-icon.ni-amber svg{stroke:var(--amber)}
+.notif-val{font-weight:700;font-size:.85rem;color:var(--white)}
+.notif-sub{font-size:.65rem;color:var(--text-3);margin-top:1px}
+
+/* ═══════════════════════════════════════
+   ANIMATED COUNTER STRIP
+═══════════════════════════════════════ */
+.counter-strip{
+  background:var(--navy-2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:48px 40px;
+  position:relative;overflow:hidden;
+}
+.counter-strip::before{
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:200px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.counter-grid{
+  max-width:1200px;margin:auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:40px;
+  position:relative;z-index:2;
+}
+.counter-item{text-align:center}
+.counter-num{
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:900;color:var(--white);
+  letter-spacing:-1.5px;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.counter-num span{color:var(--teal)}
+.counter-lbl{
+  font-size:.78rem;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.1em;
+  font-weight:600;margin-top:8px;
+}
+.counter-divider{
+  position:absolute;right:0;top:20%;bottom:20%;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--border),transparent);
+}
+
+/* ═══════════════════════════════════════
+   TRUST / LOGOS SECTION
+═══════════════════════════════════════ */
+.trust-section{
+  padding:60px 40px;
+  background:var(--navy);
+  border-bottom:1px solid var(--border);
+}
+.trust-inner{max-width:1200px;margin:auto;text-align:center}
+.trust-label{
+  font-size:.72rem;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.15em;font-weight:700;
+  margin-bottom:32px;
+  display:flex;align-items:center;gap:16px;justify-content:center;
+}
+.trust-label::before,.trust-label::after{
+  content:'';flex:1;max-width:120px;height:1px;
+  background:linear-gradient(to right,transparent,var(--border));
+}
+.trust-label::after{background:linear-gradient(to left,transparent,var(--border))}
+
+.logo-row{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:48px;
+}
+.trust-logo{
+  font-weight:800;font-size:1rem;
+  color:var(--text-3);
+  letter-spacing:.05em;
+  transition:color .3s;
+  display:flex;align-items:center;gap:8px;
+  cursor:default;
+}
+.trust-logo svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;opacity:.6}
+.trust-logo:hover{color:var(--text-2)}
+
+/* badge ratings */
+.trust-badges{
+  display:flex;justify-content:center;gap:24px;
+  flex-wrap:wrap;margin-top:40px;
+}
+.t-badge{
+  display:flex;align-items:center;gap:10px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;padding:10px 18px;
+}
+.t-badge-icon{color:var(--teal)}
+.t-badge-icon svg{width:16px;height:16px;stroke:var(--teal);stroke-width:2}
+.t-badge-text strong{display:block;font-size:.82rem;font-weight:700;color:var(--text-1)}
+.t-badge-text span{font-size:.72rem;color:var(--text-3)}
+
+/* ═══════════════════════════════════════
+   FEATURES STRIP (Enterprise)
+═══════════════════════════════════════ */
+.features-strip{
+  padding:100px 40px;
+  background:var(--navy-2);
+  position:relative;overflow:hidden;
+}
+.features-strip::before{
+  content:'';position:absolute;
+  right:-200px;top:50%;transform:translateY(-50%);
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(14,165,233,.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+.features-inner{max-width:1200px;margin:auto;position:relative;z-index:2}
+.features-header{text-align:center;margin-bottom:72px}
+.section-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--teal-dim);
+  border:1px solid var(--border-hi);
+  color:var(--teal);
+  padding:5px 14px;border-radius:100px;
+  font-size:.72rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:20px;
+  font-family:var(--mono);
+}
+.section-chip svg{width:12px;height:12px;stroke:var(--teal);stroke-width:2.5}
+
+h2.section-h2{
+  font-size:clamp(1.9rem,3vw,2.8rem);
+  font-weight:900;letter-spacing:-1px;
+  color:var(--white);line-height:1.15;
+}
+.section-sub{
+  color:var(--text-2);font-size:.95rem;
+  line-height:1.8;max-width:500px;
+  margin:16px auto 0;
+}
+
+.features-bento{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:16px;
+}
+
+.feat-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;padding:28px;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.feat-card::after{
+  content:'';position:absolute;
+  inset:0;border-radius:16px;
+  background:radial-gradient(ellipse at top left,rgba(14,165,233,.07),transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.feat-card:hover{
+  border-color:var(--border-hi);
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 0 1px rgba(14,165,233,.1);
+}
+.feat-card:hover::after{opacity:1}
+
+.feat-card.featured{
+  grid-column:span 2;
+  background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(6,182,212,.05));
+  border-color:rgba(14,165,233,.2);
+}
+
+.feat-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--teal-dim);
+  border:1px solid var(--border-hi);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+}
+.feat-icon svg{width:20px;height:20px;stroke:var(--teal);stroke-width:2}
+
+.feat-card h3{
+  font-size:1rem;font-weight:700;color:var(--text-1);
+  margin-bottom:10px;
+}
+.feat-card p{
+  font-size:.85rem;color:var(--text-2);line-height:1.7;
+}
+.feat-tags{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;
+}
+.feat-tag{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.07);
+  color:var(--text-3);
+  font-size:.65rem;font-weight:600;font-family:var(--mono);
+  padding:3px 9px;border-radius:100px;
+  letter-spacing:.04em;
+}
+
+/* ═══════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════ */
+.hiw-section{
+  padding:100px 40px;
+  background:var(--navy);
+  position:relative;
+}
+.hiw-inner{max-width:1200px;margin:auto}
+.hiw-header{text-align:center;margin-bottom:72px}
+
+.hiw-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:24px;position:relative;
+}
+.hiw-steps::before{
+  content:'';position:absolute;
+  top:30px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);
+  height:1px;
+  background:linear-gradient(to right,transparent,var(--teal),transparent);
+  opacity:.3;
+}
+
+.step-card{
+  text-align:center;padding:36px 24px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  position:relative;
+}
+.step-num{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:white;
+  width:28px;height:28px;border-radius:100px;
+  font-family:var(--mono);font-size:.75rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--teal-dim);border:1px solid var(--border-hi);
+  display:flex;align-items:center;justify-content:center;
+  margin:16px auto 20px;
+}
+.step-icon svg{width:24px;height:24px;stroke:var(--teal);stroke-width:2}
+.step-card h3{font-size:.95rem;font-weight:700;margin-bottom:10px}
+.step-card p{font-size:.83rem;color:var(--text-2);line-height:1.7}
+
+/* ═══════════════════════════════════════
+   INDUSTRIES
+═══════════════════════════════════════ */
+.ind-section{
+  padding:100px 40px;
+  background:var(--navy-2);
+  position:relative;overflow:hidden;
+}
+.ind-inner{max-width:1200px;margin:auto;position:relative;z-index:2}
+.ind-header{text-align:center;margin-bottom:64px}
+
+.ind-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.ind-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;padding:32px;
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.ind-card::before{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),var(--cyan));
+  transform:scaleX(0);
+  transition:transform .3s;
+  transform-origin:left;
+}
+.ind-card:hover::before{transform:scaleX(1)}
+.ind-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+
+.ind-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--teal-dim);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+}
+.ind-icon svg{width:22px;height:22px;stroke:var(--teal);stroke-width:2}
+.ind-card h4{font-size:1rem;font-weight:700;margin-bottom:10px}
+.ind-card p{font-size:.83rem;color:var(--text-2);line-height:1.7}
+.ind-card .ind-items{
+  list-style:none;margin-top:16px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.ind-card .ind-items li{
+  font-size:.78rem;color:var(--text-3);
+  display:flex;align-items:center;gap:7px;
+}
+.ind-card .ind-items li::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--teal);flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════ */
+#contact{
+  padding:100px 40px;
+  background:var(--navy);
+  position:relative;overflow:hidden;
+}
+#contact::before{
+  content:'';position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.contact-inner{max-width:1100px;margin:auto;position:relative;z-index:2}
+.contact-header{text-align:center;margin-bottom:64px}
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1.3fr;
+  gap:60px;align-items:start;
+}
+.contact-left{}
+.contact-left p{
+  color:var(--text-2);line-height:1.8;font-size:.95rem;
+  margin-top:16px;margin-bottom:36px;
+}
+.contact-methods{display:flex;flex-direction:column;gap:16px}
+.c-method{
+  display:flex;align-items:center;gap:14px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:14px 18px;
+  transition:border-color .2s;
+}
+.c-method:hover{border-color:var(--border-hi)}
+.c-icon{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.c-icon svg{width:16px;height:16px;stroke-width:2}
+.ci-teal{background:var(--teal-dim);border:1px solid var(--border-hi)}
+.ci-teal svg{stroke:var(--teal)}
+.ci-green{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15)}
+.ci-green svg{stroke:var(--green)}
+.ci-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.15)}
+.ci-red svg{stroke:var(--red)}
+.c-method strong{display:block;font-size:.8rem;font-weight:700;color:var(--text-1);margin-bottom:1px}
+.c-method span{font-size:.8rem;color:var(--text-3)}
+
+/* Form */
+.contact-form-wrap{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:36px;
+}
+.form-title{font-size:1rem;font-weight:700;margin-bottom:24px;color:var(--text-1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:16px}
+.form-label{
+  display:block;font-size:.75rem;font-weight:700;
+  color:var(--text-2);margin-bottom:7px;
+  text-transform:uppercase;letter-spacing:.06em;
+  font-family:var(--mono);
+}
+.form-input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.875rem;color:var(--text-1);
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.form-input:focus{
+  border-color:var(--teal);
+  background:rgba(14,165,233,.05);
+  box-shadow:0 0 0 3px rgba(14,165,233,.1);
+}
+.form-input::placeholder{color:var(--text-3)}
+textarea.form-input{resize:vertical;min-height:100px}
+
+.form-select{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.875rem;color:var(--text-1);
+  outline:none;
+  -webkit-appearance:none;
+  transition:border-color .2s;
+}
+.form-select:focus{border-color:var(--teal)}
+.form-select option{background:var(--panel);color:var(--text-1)}
+
+.btn-submit{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:white;font-weight:700;font-size:.95rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  border:none;cursor:pointer;
+  box-shadow:0 8px 24px rgba(14,165,233,.25);
+  transition:opacity .2s,transform .15s;
+  margin-top:4px;
+}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:var(--navy-2);
+  border-top:1px solid var(--border);
+  padding:32px 40px;
+}
+.footer-inner{
+  max-width:1200px;margin:auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-copy{
+  font-size:.78rem;color:var(--text-3);
+}
+.footer-links{
+  display:flex;gap:24px;list-style:none;
+}
+.footer-links a{
+  font-size:.78rem;color:var(--text-3);
+  text-decoration:none;transition:color .2s;
+}
+.footer-links a:hover{color:var(--teal)}
+.footer-badge{
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--text-3);
+  display:flex;align-items:center;gap:6px;
+}
+.footer-badge span{color:var(--teal)}
+
+/* ═══════════════════════════════════════
+   INTERSECTION ANIMATIONS
+═══════════════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{
+  opacity:0;transform:translateX(-30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{
+  opacity:0;transform:translateX(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+.stagger-1{transition-delay:.1s}
+.stagger-2{transition-delay:.2s}
+.stagger-3{transition-delay:.3s}
+.stagger-4{transition-delay:.4s}
+.stagger-5{transition-delay:.5s}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:960px){
+  .hero-inner,.contact-grid{grid-template-columns:1fr;gap:48px}
+  .hero-visual{display:none}
+  .hero-stats{flex-wrap:wrap;gap:24px}
+  .counter-grid{grid-template-columns:repeat(2,1fr)}
+  .features-bento{grid-template-columns:1fr;grid-template-rows:auto}
+  .feat-card.featured{grid-column:span 1}
+  .hiw-steps,.ind-grid{grid-template-columns:1fr}
+  .hiw-steps::before{display:none}
+  .form-row{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#hero" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    CYNEXA<span>SYSTEM</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#contact" class="btn-ghost">Login</a>
+    <a href="#contact" class="btn-nav">Free Demo</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-glow-a"></div>
+  <div class="hero-glow-b"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="status-pill"><div class="pulse"></div>Platform v2.4 — Now Live</div>
+      
+      <h1 class="hero-h1">Kendali Penuh <span class="h1-gradient">Operasional Industri</span> di Satu Platform</h1>
+      <p class="hero-sub">Sistem digital end-to-end untuk manufaktur dan distribusi — monitoring real-time, workflow approval, dan pelaporan otomatis yang menggantikan proses manual sepenuhnya.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-14 9V3z"/></svg>
+          Mulai Demo Gratis
+        </a>
+        <a href="#features" class="btn-secondary">
+          Lihat Fitur
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="c-count" data-target="98">0</span><span>%</span></div>
+          <div class="h-stat-lbl">System Uptime</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="c-count" data-target="50">0</span><span>+</span></div>
+          <div class="h-stat-lbl">Enterprise Clients</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-num"><span class="c-count" data-target="3">0</span><span>x</span></div>
+          <div class="h-stat-lbl">Efisiensi Meningkat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="notif notif-1">
+        <div class="notif-icon ni-green">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="notif-val">Produksi Normal</div>
+          <div class="notif-sub">Line A · 2 menit lalu</div>
+        </div>
+      </div>
+
+      <div class="dash-shell">
+        <div class="dash-topbar">
+          <div class="dash-dots">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-a"></div>
+            <div class="dot dot-g"></div>
+          </div>
+          <div class="dash-title-bar">cynexa.dashboard · production</div>
+          <div class="dash-live-chip">
+            <div class="pulse" style="width:5px;height:5px;background:var(--green)"></div> LIVE
+          </div>
+        </div>
+        <div class="dash-body">
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-lbl">Output / Hari</div>
+              <div class="kpi-val">2,847</div>
+              <div class="kpi-delta up">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +12.4%
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-lbl">Pending</div>
+              <div class="kpi-val">14</div>
+              <div class="kpi-delta warn">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                3 urgent
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-lbl">Efisiensi</div>
+              <div class="kpi-val">91%</div>
+              <div class="kpi-delta up">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                +3.1%
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-area">
+            <div class="chart-header">
+              <span class="chart-name">Output Produksi – 7 Hari</span>
+              <span class="chart-period">Mar '26</span>
+            </div>
+            <div class="bar-chart">
+              <div class="bar" style="height:60%"></div>
+              <div class="bar" style="height:75%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:80%"></div>
+              <div class="bar" style="height:70%"></div>
+              <div class="bar" style="height:90%"></div>
+              <div class="bar active" style="height:100%"></div>
+            </div>
+          </div>
+
+          <div class="prog-list">
+            <div class="prog-item">
+              <div class="prog-row">
+                <span class="prog-name">Line Production A</span>
+                <span class="prog-pct">87%</span>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:87%"></div></div>
+            </div>
+            <div class="prog-item">
+              <div class="prog-row">
+                <span class="prog-name">Delivery Fulfillment</span>
+                <span class="prog-pct">94%</span>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:94%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif notif-2">
+        <div class="notif-icon ni-amber">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="notif-val">Stok Menipis</div>
+          <div class="notif-sub">Material B · 14 unit left</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ANIMATED COUNTER STRIP ── -->
+<div class="counter-strip">
+  <div class="counter-grid">
+    <div class="counter-item reveal stagger-1">
+      <div class="counter-num"><span class="c-count" data-target="98" data-suffix="%">0</span></div>
+      <div class="counter-lbl">System Uptime SLA</div>
+    </div>
+    <div class="counter-item reveal stagger-2" style="position:relative">
+      <div class="counter-divider"></div>
+      <div class="counter-num"><span class="c-count" data-target="50" data-suffix="+">0</span></div>
+      <div class="counter-lbl">Enterprise Clients</div>
+    </div>
+    <div class="counter-item reveal stagger-3" style="position:relative">
+      <div class="counter-divider"></div>
+      <div class="counter-num"><span class="c-count" data-target="250" data-suffix="K+">0</span></div>
+      <div class="counter-lbl">Transaksi Diproses / Bulan</div>
+    </div>
+    <div class="counter-item reveal stagger-4" style="position:relative">
+      <div class="counter-divider"></div>
+      <div class="counter-num"><span class="c-count" data-target="5" data-suffix="yr">0</span></div>
+      <div class="counter-lbl">Pengalaman Industri</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TRUST SECTION ── -->
+<div class="trust-section">
+  <div class="trust-inner">
+    <div class="trust-label">Dipercaya oleh Perusahaan Industri Terkemuka</div>
+    <div class="logo-row">
+      <div class="trust-logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        PT. MANUFAKTUR PRIMA
+      </div>
+      <div class="trust-logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        NUSANTARA LOGISTIK
+      </div>
+      <div class="trust-logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V10l8-6 8 6v10M10 20v-6h4v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        INDONESIA INDUSTRIAL
+      </div>
+      <div class="trust-logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        TEKNO DISTRIBUSI
+      </div>
+      <div class="trust-logo">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        PRODUKSI NUSANTARA
+      </div>
+    </div>
+    <div class="trust-badges">
+      <div class="t-badge reveal stagger-1">
+        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
+        <div class="t-badge-text">
+          <strong>ISO 27001 Ready</strong>
+          <span>Data Security Certified</span>
+        </div>
+      </div>
+      <div class="t-badge reveal stagger-2">
+        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
+        <div class="t-badge-text">
+          <strong>99.9% Uptime SLA</strong>
+          <span>Enterprise Grade Infra</span>
+        </div>
+      </div>
+      <div class="t-badge reveal stagger-3">
+        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
+        <div class="t-badge-text">
+          <strong>Dedicated Support</strong>
+          <span>24/7 Technical Team</span>
+        </div>
+      </div>
+      <div class="t-badge reveal stagger-4">
+        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
+        <div class="t-badge-text">
+          <strong>On-Premise Option</strong>
+          <span>Full Data Control</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ENTERPRISE FEATURES STRIP ── -->
+<section id="features" class="features-strip">
+  <div class="features-inner">
+    <div class="features-header">
+      <div class="section-chip">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Enterprise Features
+      </div>
+      <h2 class="section-h2 reveal">Semua yang Anda Butuhkan<br>untuk Operasional Industri</h2>
+      <p class="section-sub reveal stagger-1">Dibangun khusus untuk tantangan nyata di lantai pabrik dan rantai distribusi — bukan solusi generik.</p>
+    </div>
+
+    <div class="features-bento">
+      <div class="feat-card featured reveal reveal-left">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M2 12h20M12 2v20M5 5l14 14M19 5L5 19" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Real-Time Operations Dashboard</h3>
+        <p>Visualisasi seluruh lini produksi, performa tim, dan KPI operasional dalam satu layar. Data diperbarui setiap detik dari sensor dan input field team.</p>
+        <div class="feat-tags">
+          <span class="feat-tag">LIVE DATA</span>
+          <span class="feat-tag">MULTI-SITE</span>
+          <span class="feat-tag">CUSTOM KPI</span>
+          <span class="feat-tag">EXPORT</span>
+        </div>
+      </div>
+
+      <div class="feat-card reveal stagger-2">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Digital Workflow & Approval</h3>
+        <p>Multi-level approval flow untuk laporan, work order, dan permintaan operasional dengan notifikasi otomatis dan jejak audit lengkap.</p>
+        <div class="feat-tags">
+          <span class="feat-tag">MULTI-LEVEL</span>
+          <span class="feat-tag">AUDIT TRAIL</span>
+        </div>
+      </div>
+
+      <div class="feat-card reveal stagger-1">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Inventory Intelligence</h3>
+        <p>Pantau stok material, produk jadi, dan komponen secara real-time. Alert otomatis ketika stok mendekati minimum threshold.</p>
+        <div class="feat-tags">
+          <span class="feat-tag">AUTO ALERT</span>
+          <span class="feat-tag">REORDER</span>
+        </div>
+      </div>
+
+      <div class="feat-card reveal stagger-3">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Automated Reporting</h3>
+        <p>Laporan harian, mingguan, dan bulanan yang ter-generate otomatis dan terkirim ke stakeholder sesuai jadwal.</p>
+        <div class="feat-tags">
+          <span class="feat-tag">PDF / EXCEL</span>
+          <span class="feat-tag">SCHEDULED</span>
+        </div>
+      </div>
+
+      <div class="feat-card reveal stagger-4">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Mobile Field Access</h3>
+        <p>Tim lapangan bisa input data, lihat instruksi kerja, dan submit laporan langsung dari smartphone tanpa perlu kembali ke kantor.</p>
+        <div class="feat-tags">
+          <span class="feat-tag">PWA</span>
+          <span class="feat-tag">OFFLINE MODE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="hiw-section">
+  <div class="hiw-inner">
+    <div class="hiw-header">
+      <div class="section-chip">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Process
+      </div>
+      <h2 class="section-h2 reveal">Mulai dalam 3 Langkah Sederhana</h2>
+      <p class="section-sub reveal stagger-1">Dari onboarding hingga go-live, tim kami mendampingi setiap tahap implementasi.</p>
+    </div>
+    <div class="hiw-steps">
+      <div class="step-card reveal stagger-1">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Discovery & Mapping</h3>
+        <p>Tim kami memetakan alur operasional, pain points, dan kebutuhan spesifik perusahaan Anda dalam sesi konsultasi mendalam.</p>
+      </div>
+      <div class="step-card reveal stagger-2">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Setup & Konfigurasi</h3>
+        <p>Sistem dikonfigurasi sesuai struktur organisasi, alur approval, dan metrik yang relevan — tanpa coding dari sisi Anda.</p>
+      </div>
+      <div class="step-card reveal stagger-3">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Go-Live & Support</h3>
+        <p>Pelatihan tim, migrasi data, dan monitoring aktif selama 30 hari pertama untuk memastikan adopsi berjalan mulus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRIES ── -->
+<section id="industries" class="ind-section">
+  <div class="ind-inner">
+    <div class="ind-header">
+      <div class="section-chip">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Industries
+      </div>
+      <h2 class="section-h2 reveal">Dirancang untuk Industri Anda</h2>
+      <p class="section-sub reveal stagger-1">Solusi kami sudah terbukti di berbagai sektor industri di Indonesia.</p>
+    </div>
+    <div class="ind-grid">
+      <div class="ind-card reveal stagger-1">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V10M20 20V10M12 20V4M8 20v-6M16 20v-6M4 10V6l4-2 4 2 4-2 4 2v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Manufacturing</h4>
+        <p>Kontrol lini produksi dari dalam ruang kantor dengan data real-time dari lantai pabrik.</p>
+        <ul class="ind-items">
+          <li>Production monitoring per shift</li>
+          <li>Machine efficiency tracking</li>
+          <li>Quality control digital form</li>
+          <li>Output vs target dashboard</li>
+        </ul>
+      </div>
+      <div class="ind-card reveal stagger-2">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Distribution & Logistics</h4>
+        <p>Visibilitas penuh rantai distribusi dari gudang hingga titik pengiriman akhir.</p>
+        <ul class="ind-items">
+          <li>Shipment tracking real-time</li>
+          <li>Warehouse management system</li>
+          <li>Driver & fleet monitoring</li>
+          <li>Delivery confirmation digital</li>
+        </ul>
+      </div>
+      <div class="ind-card reveal stagger-3">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Industrial Services</h4>
+        <p>Digitalisasi work order, jadwal preventif maintenance, dan laporan teknisi lapangan.</p>
+        <ul class="ind-items">
+          <li>Work order management</li>
+          <li>Preventive maintenance schedule</li>
+          <li>Field technician mobile app</li>
+          <li>SLA tracking & reporting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-header">
+      <div class="section-chip">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Contact
+      </div>
+      <h2 class="section-h2 reveal">Siap Memulai Transformasi Digital?</h2>
+      <p class="section-sub reveal stagger-1">Konsultasi gratis, tanpa komitmen. Tim kami akan menghubungi Anda dalam 1×24 jam.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-left reveal reveal-left">
+        <h3 class="section-h2" style="font-size:1.5rem">Hubungi Kami</h3>
+        <p>Ceritakan tantangan operasional Anda dan kami akan merancang solusi yang sesuai dengan kebutuhan industri Anda.</p>
+        <div class="contact-methods">
+          <div class="c-method">
+            <div class="c-icon ci-teal">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <strong>Email</strong>
+              <span>info@cynexasystem.com</span>
+            </div>
+          </div>
+          <div class="c-method">
+            <div class="c-icon ci-green">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <strong>WhatsApp</strong>
+              <span>+62813 8317 9209</span>
+            </div>
+          </div>
+          <div class="c-method">
+            <div class="c-icon ci-red">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <strong>Kantor</strong>
+              <span>Tangerang Kabupaten, Banten, ID</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrap reveal reveal-right">
+        <p class="form-title">Kirim Pesan ke Tim Kami</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nama Lengkap</label>
+            <input type="text" class="form-input" placeholder="Diaz Wahyudi">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Perusahaan</label>
+            <input type="text" class="form-input" placeholder="PT. Nama Perusahaan">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="budi@perusahaan.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">No. WhatsApp</label>
+            <input type="text" class="form-input" placeholder="+62 8xx xxxx xxxx">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Industri</label>
+          <select class="form-select">
+            <option value="" disabled selected>Pilih industri Anda</option>
+            <option>Manufacturing</option>
+            <option>Distribution & Logistics</option>
+            <option>Industrial Services</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pesan / Kebutuhan</label>
+          <textarea class="form-input" placeholder="Ceritakan tantangan operasional yang ingin Anda selesaikan..."></textarea>
+        </div>
+        <button class="btn-submit">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Kirim & Minta Demo
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">&copy; 2024 Cynexa System · All rights reserved</div>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+      <li><a href="#">Sitemap</a></li>
+    </ul>
+    <div class="footer-badge">Built for <span>Industrial Excellence</span></div>
+  </div>
+</footer>
+
+<!-- ── SCRIPTS ── -->
+<script>
+// Initialize Lucide icons
+lucide.createIcons();
+
+// ── Navbar scroll effect
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── Intersection Observer for reveal animations
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => revealObserver.observe(el));
+
+// ── Animated Counters
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1800;
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease out quart
+    const eased = 1 - Math.pow(1 - progress, 4);
+    const current = Math.floor(eased * target);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target + suffix;
+  }
+  requestAnimationFrame(update);
+}
+
+const counterEls = document.querySelectorAll('.c-count');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !entry.target.dataset.animated) {
+      entry.target.dataset.animated = 'true';
+      animateCounter(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+counterEls.forEach(el => counterObserver.observe(el));
+</script>
+</body>
+</html>
