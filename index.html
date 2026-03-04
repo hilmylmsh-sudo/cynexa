@@ -3,1443 +3,1626 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cynexa System | Industrial SaaS Platform</title>
+<title>Cynexa System — Platform Digital Operasional Manufaktur & Industri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<!-- Menggunakan Inter untuk Body dan Manrope untuk Heading agar tegas, solid, dan industrial -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
+/* ─────────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --navy:      #060B18;
-  --navy-2:    #0A1120;
-  --navy-3:    #0F1729;
-  --panel:     #111827;
-  --panel-2:   #141E2E;
-  --border:    rgba(255,255,255,0.07);
-  --border-hi: rgba(14,165,233,0.25);
+  --navy:      #05090F;
+  --navy-2:    #070D1A;
+  --navy-3:    #0A1020;
+  --panel:     #0D1526;
+  --panel-2:   #101929;
+  --border:    rgba(255,255,255,0.065);
+  --border-hi: rgba(14,165,233,0.28);
   --teal:      #0EA5E9;
   --cyan:      #06B6D4;
-  --teal-dim:  rgba(14,165,233,0.12);
-  --teal-glow: rgba(14,165,233,0.18);
+  --teal-dim:  rgba(14,165,233,0.09);
   --green:     #10B981;
   --amber:     #F59E0B;
   --red:       #EF4444;
-  --white:     #ffffff;
-  --text-1:    #F1F5F9;
-  --text-2:    #94A3B8;
-  --text-3:    #4B5563;
-  --mono:      'DM Mono', monospace;
+  --white:     #F8FAFC;
+  --text-1:    #EEF2F7;
+  --text-2:    #8DA3BC;
+  --text-3:    #3D5166;
+  --mono:      'DM Mono',monospace;
+  --display:   'Manrope',sans-serif;
+  --body:      'Inter',sans-serif;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
 }
 
 html{scroll-behavior:smooth}
-
 body{
-  font-family:'Plus Jakarta Sans',sans-serif;
+  font-family:var(--body);
   background:var(--navy);
   color:var(--text-1);
   overflow-x:hidden;
-  cursor:default;
+  line-height:1;
 }
 
-/* ─── NOISE OVERLAY ─── */
+/* grain overlay */
 body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:9999;
-  opacity:.6;
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.55;
 }
 
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:var(--navy)}
-::-webkit-scrollbar-thumb{background:var(--teal-dim);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(14,165,233,.2);border-radius:3px}
 
-/* ═══════════════════════════════════════
-   GLASS NAV
-═══════════════════════════════════════ */
-nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:500;
-  padding:0 40px;
-  height:66px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(6,11,24,0.55);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid var(--border);
-  transition:background .3s;
+/* ─────────────────────────────────────
+   UTILITIES
+───────────────────────────────────── */
+.max{max-width:1220px;margin-inline:auto;width:100%}
+
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 14px;border-radius:100px;
+  font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;
+  margin-bottom:20px;
 }
-nav.scrolled{background:rgba(6,11,24,0.88)}
+.chip-teal{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);color:var(--teal)}
+.chip-red{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:#FC8181}
+.chip-green{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);color:var(--green)}
+.chip svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.5;fill:none}
+
+h2.sh2{
+  font-family:var(--display);
+  font-size:clamp(1.9rem,2.9vw,2.5rem);
+  font-weight:800;letter-spacing:-0.03em;
+  color:var(--white);line-height:1.2;
+}
+.sh2 .accent{
+  background:linear-gradient(120deg,var(--teal),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sub{color:var(--text-2);font-size:1rem;line-height:1.6;max-width:580px;margin:14px auto 0}
+
+/* ─────────────────────────────────────
+   NAV
+───────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:64px;padding:0 44px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(5,9,15,.45);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  border-bottom:1px solid var(--border);
+  transition:background .35s;
+}
+nav.scrolled{background:rgba(5,9,15,.92)}
 
 .logo{
   display:flex;align-items:center;gap:10px;
-  font-weight:900;font-size:1.15rem;letter-spacing:-.5px;
+  font-family:var(--display);font-size:1.1rem;font-weight:800;letter-spacing:-0.02em;
   color:var(--white);text-decoration:none;
 }
 .logo-mark{
-  width:30px;height:30px;
+  width:30px;height:30px;border-radius:7px;
   background:linear-gradient(135deg,var(--teal),var(--cyan));
-  border-radius:7px;
   display:flex;align-items:center;justify-content:center;
 }
-.logo-mark svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
-.logo span{color:var(--teal)}
+.logo-mark svg{width:15px;height:15px;stroke:#fff;stroke-width:2.5;fill:none}
+.logo em{color:var(--teal);font-style:normal}
 
-.nav-links{
-  display:flex;gap:32px;list-style:none;
-}
+.nav-links{display:flex;gap:32px;list-style:none}
 .nav-links a{
   text-decoration:none;color:var(--text-2);
-  font-size:.875rem;font-weight:500;
+  font-size:.85rem;font-weight:500;
   transition:color .2s;
 }
 .nav-links a:hover{color:var(--text-1)}
 
-.nav-actions{display:flex;gap:10px;align-items:center}
-
+.nav-actions{display:flex;gap:8px;align-items:center}
 .btn-ghost{
-  padding:8px 18px;border-radius:8px;
-  border:1px solid var(--border);
-  color:var(--text-2);font-size:.85rem;font-weight:600;
-  text-decoration:none;background:transparent;
-  transition:all .2s;
+  padding:7px 16px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);color:var(--text-2);
+  font-size:.85rem;font-weight:600;text-decoration:none;
+  background:transparent;transition:all .2s;
 }
 .btn-ghost:hover{border-color:var(--border-hi);color:var(--teal)}
-
-.btn-nav{
-  padding:9px 20px;border-radius:8px;
+.btn-primary-sm{
+  padding:8px 20px;border-radius:var(--radius-sm);
   background:linear-gradient(135deg,var(--teal),var(--cyan));
-  color:white;font-size:.85rem;font-weight:700;
-  text-decoration:none;
-  box-shadow:0 0 20px rgba(14,165,233,.25);
+  color:#fff;font-size:.85rem;font-weight:600;text-decoration:none;
+  box-shadow:0 0 20px rgba(14,165,233,.22);
   transition:opacity .2s,transform .15s;
 }
-.btn-nav:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary-sm:hover{opacity:.88;transform:translateY(-1px)}
 
-/* ═══════════════════════════════════════
+/* ─────────────────────────────────────
    HERO
-═══════════════════════════════════════ */
+───────────────────────────────────── */
 #hero{
-  min-height:100vh;
-  padding:140px 40px 100px;
-  position:relative;
-  display:flex;align-items:center;
-  overflow:hidden;
+  min-height:100vh;padding:148px 44px 100px;
+  position:relative;display:flex;align-items:center;overflow:hidden;
 }
-
-/* grid lines */
 #hero::before{
   content:'';position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(14,165,233,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(14,165,233,.04) 1px,transparent 1px);
+    linear-gradient(rgba(14,165,233,.032) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(14,165,233,.032) 1px,transparent 1px);
   background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 60% at 60% 50%,black 0%,transparent 100%);
+  mask-image:radial-gradient(ellipse 85% 70% at 62% 48%,black,transparent);
 }
-
-/* corner accent lines */
-#hero::after{
-  content:'';position:absolute;
-  top:0;right:0;
-  width:1px;height:200px;
-  background:linear-gradient(to bottom,transparent,var(--teal),transparent);
-  opacity:.4;
-}
-
 .hero-glow-a{
-  position:absolute;top:-200px;right:-100px;
-  width:800px;height:800px;
-  background:radial-gradient(circle,rgba(14,165,233,.08) 0%,transparent 65%);
-  pointer-events:none;
+  position:absolute;top:-160px;right:-60px;width:820px;height:820px;
+  background:radial-gradient(circle,rgba(14,165,233,.07) 0%,transparent 62%);pointer-events:none;
 }
 .hero-glow-b{
-  position:absolute;bottom:-200px;left:-100px;
-  width:600px;height:600px;
-  background:radial-gradient(circle,rgba(6,182,212,.06) 0%,transparent 65%);
-  pointer-events:none;
+  position:absolute;bottom:-220px;left:-120px;width:640px;height:640px;
+  background:radial-gradient(circle,rgba(6,182,212,.05) 0%,transparent 65%);pointer-events:none;
 }
 
 .hero-inner{
-  max-width:1200px;margin:auto;width:100%;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:center;
   position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1.08fr;gap:72px;align-items:center;
 }
 
-/* status pill */
 .status-pill{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(16,185,129,.1);
-  border:1px solid rgba(16,185,129,.2);
-  color:#10B981;
-  padding:5px 14px;border-radius:100px;
-  font-size:.72rem;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  margin-bottom:28px;
-  font-family:var(--mono);
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);
+  color:#10B981;padding:5px 13px;border-radius:100px;
+  font-family:var(--mono);font-size:.67rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:18px;
 }
 .pulse{
-  width:7px;height:7px;border-radius:50%;
-  background:#10B981;
-  box-shadow:0 0 0 0 rgba(16,185,129,.5);
+  width:6px;height:6px;border-radius:50%;background:#10B981;
   animation:pulse 2s infinite;
 }
 @keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}
-  70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)}
+  70%{box-shadow:0 0 0 7px rgba(16,185,129,0)}
   100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
 }
 
 .hero-eyebrow{
-  font-family:var(--mono);
-  font-size:.72rem;color:var(--teal);
-  letter-spacing:.15em;text-transform:uppercase;
-  margin-bottom:16px;opacity:.8;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--text-3);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;
+}
+.hero-eyebrow::before{
+  content:'';width:28px;height:1px;background:var(--teal);
 }
 
 h1.hero-h1{
-  font-size:clamp(2.4rem,4.2vw,3.8rem);
-  font-weight:900;
-  line-height:1.1;
-  letter-spacing:-1.5px;
-  color:var(--white);
-  margin-bottom:24px;
+  font-family:var(--display);
+  font-size:clamp(2.1rem,3.8vw,3.2rem);
+  font-weight:800;line-height:1.15;letter-spacing:-0.03em;
+  color:var(--white);margin-bottom:10px;
 }
-.h1-gradient{
-  background:linear-gradient(135deg,var(--teal) 0%,var(--cyan) 50%,#a78bfa 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.hero-sub{
-  color:var(--text-2);font-size:1rem;
-  line-height:1.8;max-width:460px;
-  margin-bottom:40px;
-}
-
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
-
-.btn-primary{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:14px 28px;border-radius:10px;
-  background:linear-gradient(135deg,var(--teal),var(--cyan));
-  color:white;font-weight:700;font-size:.95rem;
-  text-decoration:none;
-  box-shadow:0 8px 32px rgba(14,165,233,.3),0 0 0 1px rgba(14,165,233,.2);
-  transition:all .2s;
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(14,165,233,.4)}
-.btn-primary svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
-
-.btn-secondary{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:14px 28px;border-radius:10px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  color:var(--text-2);font-weight:600;font-size:.95rem;
-  text-decoration:none;
-  transition:all .2s;
-}
-.btn-secondary:hover{border-color:var(--border-hi);color:var(--text-1);background:rgba(14,165,233,.05)}
-.btn-secondary svg{width:15px;height:15px;stroke:currentColor;stroke-width:2}
-
-/* micro stats */
-.hero-stats{
-  display:flex;gap:40px;
-  padding-top:32px;
-  border-top:1px solid var(--border);
-}
-.h-stat-num{
-  font-size:1.7rem;font-weight:900;color:var(--white);
-  letter-spacing:-1px;line-height:1;
-}
-.h-stat-num span{color:var(--teal)}
-.h-stat-lbl{
-  font-size:.72rem;color:var(--text-3);
-  text-transform:uppercase;letter-spacing:.07em;font-weight:600;
+.h1-sub{
+  display:block;
+  font-size:.85em;
+  background:linear-gradient(120deg,var(--teal) 0%,var(--cyan) 55%,#93C5FD 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-top:4px;
 }
 
-/* ── Dashboard Mock ── */
+.pain-strip{
+  display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 26px;
+}
+.pain-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);
+  color:rgba(252,129,129,.85);
+  padding:4px 11px;border-radius:6px;
+  font-family:var(--mono);font-size:.65rem;font-weight:500;letter-spacing:.02em;
+}
+.pain-tag::before{content:'✕';font-size:.6rem;opacity:.7}
+
+.hero-sub{
+  color:var(--text-2);font-size:1rem;line-height:1.6;max-width:490px;margin-bottom:34px;
+}
+.hero-sub strong{color:var(--text-1);font-weight:600}
+
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.btn-hero-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 26px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;
+  box-shadow:0 8px 28px rgba(14,165,233,.3),0 0 0 1px rgba(14,165,233,.12);
+  transition:all .22s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(14,165,233,.4)}
+.btn-hero-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 24px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  color:var(--text-1);font-weight:600;font-size:.95rem;text-decoration:none;
+  transition:all .22s;
+}
+.btn-hero-secondary:hover{border-color:var(--border-hi);background:rgba(14,165,233,.04)}
+.btn-hero-primary svg,.btn-hero-secondary svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.5;fill:none}
+
+.hero-stats{
+  display:flex;gap:40px;padding-top:26px;
+  border-top:1px solid var(--border);
+}
+.hs-num{
+  font-family:var(--display);
+  font-size:1.6rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;line-height:1;
+}
+.hs-num em{color:var(--teal);font-style:normal}
+.hs-lbl{font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-top:6px}
+
+/* ── DASHBOARD MOCK ── */
 .hero-visual{position:relative}
 
 .dash-shell{
-  background:linear-gradient(145deg,rgba(17,24,39,.9),rgba(10,17,32,.95));
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:
-    0 0 0 1px rgba(14,165,233,.08),
-    0 40px 80px rgba(0,0,0,.6),
-    inset 0 1px 0 rgba(255,255,255,.06);
-  backdrop-filter:blur(10px);
+  background:linear-gradient(150deg,rgba(13,21,38,.97),rgba(7,13,26,.99));
+  border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(14,165,233,.06),0 48px 96px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.04);
 }
-
-.dash-topbar{
+.dash-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  background:rgba(0,0,0,.2);
+  padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.22);
 }
-.dash-dots{display:flex;gap:6px}
+.dots{display:flex;gap:5px}
 .dot{width:10px;height:10px;border-radius:50%}
-.dot-r{background:#EF4444;opacity:.7}
-.dot-a{background:#F59E0B;opacity:.7}
-.dot-g{background:#10B981;opacity:.7}
-.dash-title-bar{
-  font-family:var(--mono);
-  font-size:.72rem;color:var(--text-3);
+.d-r{background:#EF4444;opacity:.65}.d-a{background:#F59E0B;opacity:.65}.d-g{background:#10B981;opacity:.65}
+.bar-title{font-family:var(--mono);font-size:.65rem;color:var(--text-3)}
+.live-badge{
+  display:flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:.62rem;color:var(--green);
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.13);
+  padding:2px 9px;border-radius:100px;
 }
-.dash-live-chip{
-  display:flex;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:.65rem;
-  color:var(--green);
-  background:rgba(16,185,129,.1);
-  border:1px solid rgba(16,185,129,.15);
-  padding:3px 9px;border-radius:100px;
-}
+.live-badge .pulse{width:5px;height:5px;background:var(--green)}
 
-.dash-body{padding:20px}
+.dash-body{padding:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.048);border-radius:9px;padding:12px}
+.kpi-l{font-size:.6rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;font-weight:600;}
+.kpi-v{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:-.02em}
+.kpi-d{font-size:.65rem;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:3px}
+.kpi-d svg{width:10px;height:10px;stroke-width:3;fill:none}
+.up{color:var(--green)}.warn{color:var(--amber)}
 
-.kpi-row{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-bottom:16px;
-}
-.kpi{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:10px;padding:14px;
-}
-.kpi-lbl{font-size:.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.kpi-val{font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:-0.5px}
-.kpi-delta{font-size:.65rem;font-weight:600;margin-top:3px;display:flex;align-items:center;gap:3px}
-.kpi-delta svg{width:10px;height:10px;stroke-width:3}
-.up{color:var(--green)}.warn{color:var(--amber)}.down{color:var(--red)}
+.chart-box{background:rgba(255,255,255,.016);border:1px solid rgba(255,255,255,.04);border-radius:9px;padding:13px;margin-bottom:10px}
+.ch-head{display:flex;justify-content:space-between;margin-bottom:11px}
+.ch-name{font-size:.75rem;font-weight:600;color:var(--text-1)}
+.ch-per{font-family:var(--mono);font-size:.65rem;color:var(--text-3)}
+.bars{display:flex;align-items:flex-end;gap:4px;height:54px}
+.bar-col{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--teal),rgba(6,182,212,.3));opacity:.6;min-width:0;transition:opacity .2s}
+.bar-col.hi{opacity:1;background:linear-gradient(to top,var(--teal),var(--cyan))}
 
-.chart-area{
-  background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:10px;
-  padding:16px;
-  margin-bottom:12px;
-}
-.chart-header{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:14px;
-}
-.chart-name{font-size:.78rem;font-weight:700;color:var(--text-1)}
-.chart-period{font-family:var(--mono);font-size:.63rem;color:var(--text-3)}
+.prog-rows{display:flex;flex-direction:column;gap:8px}
+.pr-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.pr-name{font-size:.7rem;color:var(--text-2);font-weight:500;}.pr-pct{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--text-1)}
+.pr-track{height:4px;background:rgba(255,255,255,.055);border-radius:100px;overflow:hidden}
+.pr-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--teal),var(--cyan))}
 
-.bar-chart{
-  display:flex;align-items:flex-end;gap:5px;
-  height:64px;
-}
-.bar{
-  flex:1;border-radius:4px 4px 0 0;
-  background:linear-gradient(to top,var(--teal),rgba(6,182,212,.4));
-  opacity:.7;transition:opacity .2s;min-width:0;
-}
-.bar:hover{opacity:1}
-.bar.active{opacity:1;background:linear-gradient(to top,var(--teal),var(--cyan))}
-
-.prog-list{display:flex;flex-direction:column;gap:9px}
-.prog-item{}
-.prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
-.prog-name{font-size:.72rem;color:var(--text-2)}
-.prog-pct{font-size:.72rem;font-weight:700;font-family:var(--mono);color:var(--text-1)}
-.prog-track{height:4px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
-.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--teal),var(--cyan))}
-
-/* floating notification cards */
 .notif{
-  position:absolute;
-  background:rgba(15,23,41,.95);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:12px;padding:12px 16px;
-  display:flex;align-items:center;gap:10px;
-  backdrop-filter:blur(16px);
-  box-shadow:0 16px 40px rgba(0,0,0,.4);
+  position:absolute;background:rgba(9,15,30,.96);border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(20px);box-shadow:0 16px 36px rgba(0,0,0,.5);
 }
-.notif-1{top:-18px;right:-24px;animation:floatA 4s ease-in-out infinite}
-.notif-2{bottom:24px;left:-32px;animation:floatB 4s ease-in-out infinite}
+.n1{top:-14px;right:-20px;animation:fA 4s ease-in-out infinite}
+.n2{bottom:18px;left:-26px;animation:fB 4.5s ease-in-out infinite}
+@keyframes fA{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-9px) rotate(-1.2deg)}}
+@keyframes fB{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+.n-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ni-g{background:rgba(16,185,129,.13)}.ni-g svg{stroke:var(--green)}
+.ni-a{background:rgba(245,158,11,.13)}.ni-a svg{stroke:var(--amber)}
+.n-icon svg{width:14px;height:14px;stroke-width:2.5;fill:none}
+.n-val{font-weight:600;font-size:.8rem;color:var(--white)}
+.n-sub{font-size:.65rem;color:var(--text-3);margin-top:2px}
 
-@keyframes floatA{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(-1deg)}}
-@keyframes floatB{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
-
-.notif-icon{
-  width:32px;height:32px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.notif-icon.ni-green{background:rgba(16,185,129,.15)}
-.notif-icon.ni-amber{background:rgba(245,158,11,.15)}
-.notif-icon svg{width:14px;height:14px;stroke-width:2.5}
-.notif-icon.ni-green svg{stroke:var(--green)}
-.notif-icon.ni-amber svg{stroke:var(--amber)}
-.notif-val{font-weight:700;font-size:.85rem;color:var(--white)}
-.notif-sub{font-size:.65rem;color:var(--text-3);margin-top:1px}
-
-/* ═══════════════════════════════════════
-   ANIMATED COUNTER STRIP
-═══════════════════════════════════════ */
-.counter-strip{
+/* ─────────────────────────────────────
+   STATS STRIP
+───────────────────────────────────── */
+.stats-strip{
   background:var(--navy-2);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:48px 40px;
-  position:relative;overflow:hidden;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:48px 44px;position:relative;overflow:hidden;
 }
-.counter-strip::before{
-  content:'';position:absolute;
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  width:800px;height:200px;
-  background:radial-gradient(ellipse,rgba(14,165,233,.05) 0%,transparent 70%);
+.stats-strip::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:900px;height:220px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.04) 0%,transparent 70%);
   pointer-events:none;
 }
-.counter-grid{
-  max-width:1200px;margin:auto;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:40px;
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
   position:relative;z-index:2;
 }
-.counter-item{text-align:center}
-.counter-num{
-  font-size:clamp(2rem,3.5vw,3rem);
-  font-weight:900;color:var(--white);
-  letter-spacing:-1.5px;line-height:1;
-  font-variant-numeric:tabular-nums;
-}
-.counter-num span{color:var(--teal)}
-.counter-lbl{
-  font-size:.78rem;color:var(--text-3);
-  text-transform:uppercase;letter-spacing:.1em;
-  font-weight:600;margin-top:8px;
-}
-.counter-divider{
-  position:absolute;right:0;top:20%;bottom:20%;
+.stat-item{text-align:center;padding:0 20px;position:relative}
+.stat-item+.stat-item::before{
+  content:'';position:absolute;left:0;top:15%;bottom:15%;
   width:1px;background:linear-gradient(to bottom,transparent,var(--border),transparent);
 }
+.stat-num{
+  font-family:var(--display);
+  font-size:clamp(1.9rem,2.8vw,2.5rem);font-weight:800;
+  color:var(--white);letter-spacing:-0.03em;line-height:1;
+}
+.stat-num em{color:var(--teal);font-style:normal}
+.stat-lbl{font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-top:8px}
 
-/* ═══════════════════════════════════════
-   TRUST / LOGOS SECTION
-═══════════════════════════════════════ */
-.trust-section{
-  padding:60px 40px;
-  background:var(--navy);
-  border-bottom:1px solid var(--border);
-}
-.trust-inner{max-width:1200px;margin:auto;text-align:center}
-.trust-label{
-  font-size:.72rem;color:var(--text-3);
-  text-transform:uppercase;letter-spacing:.15em;font-weight:700;
-  margin-bottom:32px;
-  display:flex;align-items:center;gap:16px;justify-content:center;
-}
-.trust-label::before,.trust-label::after{
-  content:'';flex:1;max-width:120px;height:1px;
-  background:linear-gradient(to right,transparent,var(--border));
-}
-.trust-label::after{background:linear-gradient(to left,transparent,var(--border))}
+/* ─────────────────────────────────────
+   SECTION BASE
+───────────────────────────────────── */
+section{padding:100px 44px}
+.sec-header{text-align:center;margin-bottom:60px}
 
-.logo-row{
-  display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:48px;
+/* ─────────────────────────────────────
+   PROBLEM SECTION
+───────────────────────────────────── */
+#problem{
+  background:var(--navy);position:relative;overflow:hidden;
 }
-.trust-logo{
-  font-weight:800;font-size:1rem;
-  color:var(--text-3);
-  letter-spacing:.05em;
-  transition:color .3s;
-  display:flex;align-items:center;gap:8px;
-  cursor:default;
-}
-.trust-logo svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;opacity:.6}
-.trust-logo:hover{color:var(--text-2)}
-
-/* badge ratings */
-.trust-badges{
-  display:flex;justify-content:center;gap:24px;
-  flex-wrap:wrap;margin-top:40px;
-}
-.t-badge{
-  display:flex;align-items:center;gap:10px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:10px;padding:10px 18px;
-}
-.t-badge-icon{color:var(--teal)}
-.t-badge-icon svg{width:16px;height:16px;stroke:var(--teal);stroke-width:2}
-.t-badge-text strong{display:block;font-size:.82rem;font-weight:700;color:var(--text-1)}
-.t-badge-text span{font-size:.72rem;color:var(--text-3)}
-
-/* ═══════════════════════════════════════
-   FEATURES STRIP (Enterprise)
-═══════════════════════════════════════ */
-.features-strip{
-  padding:100px 40px;
-  background:var(--navy-2);
-  position:relative;overflow:hidden;
-}
-.features-strip::before{
-  content:'';position:absolute;
-  right:-200px;top:50%;transform:translateY(-50%);
-  width:500px;height:500px;
-  background:radial-gradient(circle,rgba(14,165,233,.06) 0%,transparent 65%);
+#problem::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 0%,rgba(239,68,68,.025) 50%,transparent 100%);
   pointer-events:none;
 }
-.features-inner{max-width:1200px;margin:auto;position:relative;z-index:2}
-.features-header{text-align:center;margin-bottom:72px}
-.section-chip{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--teal-dim);
-  border:1px solid var(--border-hi);
-  color:var(--teal);
-  padding:5px 14px;border-radius:100px;
-  font-size:.72rem;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:20px;
-  font-family:var(--mono);
-}
-.section-chip svg{width:12px;height:12px;stroke:var(--teal);stroke-width:2.5}
 
-h2.section-h2{
-  font-size:clamp(1.9rem,3vw,2.8rem);
-  font-weight:900;letter-spacing:-1px;
-  color:var(--white);line-height:1.15;
+/* pain grid */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px}
+.pain-card{
+  background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);
+  border-radius:var(--radius-lg);padding:26px;position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s;
 }
-.section-sub{
-  color:var(--text-2);font-size:.95rem;
-  line-height:1.8;max-width:500px;
-  margin:16px auto 0;
+.pain-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(239,68,68,.4),transparent);
+}
+.pain-card:hover{border-color:rgba(239,68,68,.22);transform:translateY(-3px)}
+.pain-seq{font-family:var(--mono);font-size:.65rem;color:rgba(239,68,68,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px; font-weight:500;}
+.pain-icon{
+  width:40px;height:40px;border-radius:9px;
+  background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);
+  display:flex;align-items:center;justify-content:center;margin-bottom:14px;
+}
+.pain-icon svg{width:18px;height:18px;stroke:#FC8181;stroke-width:2;fill:none}
+.pain-card h3{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--text-1);margin-bottom:8px;line-height:1.4; letter-spacing:-0.01em;}
+.pain-card p{font-size:.85rem;color:var(--text-2);line-height:1.6}
+
+/* before / after */
+.ba-wrap{
+  display:grid;grid-template-columns:1fr 56px 1fr;gap:20px;align-items:center;
+}
+.ba-col{
+  background:var(--panel);border-radius:var(--radius-lg);padding:28px;
+}
+.ba-col.col-before{border:1px solid rgba(239,68,68,.12)}
+.ba-col.col-after{border:1px solid rgba(16,185,129,.16);background:rgba(16,185,129,.025)}
+.ba-head{
+  font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.05em;
+  text-transform:uppercase;margin-bottom:18px;
+}
+.col-before .ba-head{color:rgba(239,68,68,.7)}
+.col-after .ba-head{color:rgba(16,185,129,.8)}
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ba-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:.9rem;line-height:1.5; font-weight:500;
+}
+.ba-list li .ico{flex-shrink:0;margin-top:2px}
+.ba-list li .ico svg{width:16px;height:16px;stroke-width:2.5;fill:none}
+.col-before .ico svg{stroke:rgba(239,68,68,.65)}
+.col-after .ico svg{stroke:var(--green)}
+.col-before li{color:var(--text-2)}.col-after li{color:var(--text-1)}
+
+.ba-arrow{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 28px rgba(14,165,233,.28);
+}
+.ba-arrow svg{width:22px;height:22px;stroke:#fff;stroke-width:2.5;fill:none}
+
+/* ─────────────────────────────────────
+   LOGOS / TRUST
+───────────────────────────────────── */
+.logos-section{
+  background:var(--navy-2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:52px 44px;
+}
+.logos-label{
+  text-align:center;font-size:.7rem;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.1em;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:28px;
+}
+.logos-label::before,.logos-label::after{
+  content:'';flex:1;max-width:100px;height:1px;
+  background:linear-gradient(to right,transparent,var(--border));
+}
+.logos-label::after{background:linear-gradient(to left,transparent,var(--border))}
+.logo-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:44px;margin-bottom:36px}
+.tlogo{
+  font-weight:700;font-size:.9rem;color:var(--text-3);letter-spacing:.02em;
+  display:flex;align-items:center;gap:8px;transition:color .3s;cursor:default;
+}
+.tlogo svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;opacity:.6}
+.tlogo:hover{color:var(--text-2)}
+
+.trust-badges{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.tbadge{
+  display:flex;align-items:center;gap:10px;
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 18px;
+  transition:border-color .2s;
+}
+.tbadge:hover{border-color:var(--border-hi)}
+.tbadge svg{width:16px;height:16px;stroke:var(--teal);stroke-width:2;fill:none;flex-shrink:0}
+.tbadge strong{display:block;font-size:.8rem;font-weight:600;color:var(--text-1); margin-bottom:2px;}
+.tbadge span{font-size:.7rem;color:var(--text-3)}
+
+/* ─────────────────────────────────────
+   FEATURES / SOLUTION
+───────────────────────────────────── */
+#features{background:var(--navy-3);position:relative;overflow:hidden}
+#features::after{
+  content:'';position:absolute;right:-120px;top:40%;transform:translateY(-50%);
+  width:480px;height:480px;
+  background:radial-gradient(circle,rgba(14,165,233,.05) 0%,transparent 65%);pointer-events:none;
 }
 
-.features-bento{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:auto auto;
-  gap:16px;
+.feat-bento{
+  display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:auto;gap:13px;
+  position:relative;z-index:2;
 }
-
 .feat-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;padding:28px;
-  position:relative;overflow:hidden;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:26px;position:relative;overflow:hidden;
   transition:border-color .25s,transform .25s,box-shadow .25s;
 }
 .feat-card::after{
-  content:'';position:absolute;
-  inset:0;border-radius:16px;
-  background:radial-gradient(ellipse at top left,rgba(14,165,233,.07),transparent 60%);
-  opacity:0;transition:opacity .3s;
+  content:'';position:absolute;inset:0;border-radius:var(--radius-lg);
+  background:radial-gradient(ellipse at top left,rgba(14,165,233,.055),transparent 55%);
+  opacity:0;transition:opacity .3s;pointer-events:none;
 }
-.feat-card:hover{
-  border-color:var(--border-hi);
-  transform:translateY(-4px);
-  box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 0 1px rgba(14,165,233,.1);
-}
+.feat-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 20px 56px rgba(0,0,0,.3)}
 .feat-card:hover::after{opacity:1}
-
-.feat-card.featured{
-  grid-column:span 2;
-  background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(6,182,212,.05));
-  border-color:rgba(14,165,233,.2);
-}
+.feat-card.wide{grid-column:span 2;background:linear-gradient(135deg,rgba(14,165,233,.06),rgba(6,182,212,.035));border-color:rgba(14,165,233,.16)}
 
 .feat-icon{
   width:44px;height:44px;border-radius:10px;
-  background:var(--teal-dim);
-  border:1px solid var(--border-hi);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:20px;
+  background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.18);
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
 }
-.feat-icon svg{width:20px;height:20px;stroke:var(--teal);stroke-width:2}
+.feat-icon svg{width:20px;height:20px;stroke:var(--teal);stroke-width:2;fill:none}
 
-.feat-card h3{
-  font-size:1rem;font-weight:700;color:var(--text-1);
-  margin-bottom:10px;
+.feat-card .feat-result{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.14);
+  color:var(--green);font-size:.65rem;font-weight:500;font-family:var(--mono);
+  padding:4px 10px;border-radius:100px;margin-bottom:12px;
+  text-transform:uppercase;letter-spacing:.05em;
 }
-.feat-card p{
-  font-size:.85rem;color:var(--text-2);line-height:1.7;
-}
-.feat-tags{
-  display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;
-}
-.feat-tag{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.07);
-  color:var(--text-3);
-  font-size:.65rem;font-weight:600;font-family:var(--mono);
-  padding:3px 9px;border-radius:100px;
-  letter-spacing:.04em;
+.feat-card h3{font-family:var(--display);font-size:1.1rem;font-weight:700;color:var(--text-1);margin-bottom:8px; letter-spacing:-0.01em;}
+.feat-card p{font-size:.85rem;color:var(--text-2);line-height:1.6}
+.feat-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.ftag{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.065);
+  color:var(--text-2);font-size:.65rem;font-weight:500;font-family:var(--mono);
+  padding:4px 10px;border-radius:100px;
 }
 
-/* ═══════════════════════════════════════
+/* ─────────────────────────────────────
+   DEMO PREVIEW
+───────────────────────────────────── */
+#demo{background:var(--navy-2);position:relative;overflow:hidden}
+#demo::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:1000px;height:380px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.055) 0%,transparent 65%);pointer-events:none;
+}
+
+.demo-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:36px;flex-wrap:wrap}
+.dtab{
+  padding:10px 20px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:transparent;color:var(--text-3);
+  font-size:.85rem;font-weight:600;font-family:var(--body);cursor:pointer;
+  transition:all .2s;
+}
+.dtab:hover{border-color:var(--border-hi);color:var(--text-2)}
+.dtab.active{background:rgba(14,165,233,.08);border-color:rgba(14,165,233,.25);color:var(--teal)}
+
+.demo-shell{
+  background:linear-gradient(155deg,rgba(11,19,36,.98),rgba(7,13,25,.99));
+  border:1px solid rgba(255,255,255,.075);border-radius:20px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(14,165,233,.055),0 56px 110px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.03);
+}
+.demo-topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.045);background:rgba(0,0,0,.22);
+}
+.demo-url{
+  flex:1;font-family:var(--mono);font-size:.7rem;color:var(--text-3);
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.045);
+  border-radius:6px;padding:6px 12px;
+}
+.demo-conn{font-family:var(--mono);font-size:.65rem;color:var(--green);display:flex;align-items:center;gap:5px}
+
+.demo-layout{display:grid;grid-template-columns:200px 1fr;min-height:380px}
+.demo-nav{
+  background:rgba(0,0,0,.18);border-right:1px solid rgba(255,255,255,.04);padding:20px 0;
+}
+.dnav-grp{margin-bottom:12px}
+.dnav-lbl{
+  font-family:var(--mono);font-size:.6rem;font-weight:500;
+  text-transform:uppercase;color:var(--text-3);padding:0 18px;margin-bottom:6px;
+}
+.dnav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 18px;
+  font-size:.8rem;color:var(--text-3);cursor:pointer; font-weight:500;
+  transition:all .18s;border-left:2px solid transparent;
+}
+.dnav-item svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;flex-shrink:0}
+.dnav-item:hover{color:var(--text-2);background:rgba(255,255,255,.018)}
+.dnav-item.on{color:var(--teal);background:rgba(14,165,233,.055);border-left-color:var(--teal)}
+
+.demo-main{padding:24px;overflow:hidden}
+.demo-main-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.dpage-title{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--text-1)}
+.dactions{display:flex;gap:8px}
+.dbtn{
+  padding:8px 14px;border-radius:6px;font-size:.8rem;font-weight:600;
+  font-family:var(--body);cursor:pointer;border:none;transition:all .18s;
+}
+.dbtn-ghost{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text-2)}
+.dbtn-primary{background:linear-gradient(135deg,var(--teal),var(--cyan));color:#fff;border:none}
+
+/* demo kpi */
+.dkpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.dkpi{background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.045);border-radius:10px;padding:14px}
+.dkpi-l{font-size:.65rem;color:var(--text-3);text-transform:uppercase; font-weight:600; margin-bottom:6px}
+.dkpi-v{font-family:var(--display);font-size:1.25rem;font-weight:800;color:var(--white);letter-spacing:-.02em}
+.dkpi-s{font-size:.65rem;font-weight:500;margin-top:4px;display:flex;align-items:center;gap:4px}
+.dkpi-s svg{width:10px;height:10px;stroke-width:3;fill:none}
+.dkpi-s.up{color:var(--green)}.dkpi-s.warn{color:var(--amber)}
+
+.dchart-row{display:grid;grid-template-columns:1.8fr 1fr;gap:12px;margin-bottom:14px}
+.dchart{background:rgba(255,255,255,.016);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:16px}
+.dchart-title{font-size:.8rem;font-weight:600;color:var(--text-1);margin-bottom:14px}
+.dbars{display:flex;align-items:flex-end;gap:6px;height:80px}
+.dbar{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(to top,var(--teal),rgba(6,182,212,.3));opacity:.6;min-width:0}
+.dbar.hi{opacity:1;background:linear-gradient(to top,var(--teal),var(--cyan))}
+
+.dlist{display:flex;flex-direction:column;gap:6px}
+.dlist-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.04);
+  border-radius:8px;padding:8px 12px;
+}
+.dlist-name{font-size:.75rem;font-weight:500;color:var(--text-2);display:flex;align-items:center;gap:8px}
+.dlist-name svg{width:12px;height:12px;stroke:var(--teal);stroke-width:2;fill:none}
+.dbadge{font-family:var(--mono);font-size:.6rem;font-weight:500;padding:3px 8px;border-radius:100px}
+.dok{background:rgba(16,185,129,.09);color:var(--green);border:1px solid rgba(16,185,129,.18)}
+.dwarn{background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.18)}
+
+/* ─────────────────────────────────────
    HOW IT WORKS
-═══════════════════════════════════════ */
-.hiw-section{
-  padding:100px 40px;
-  background:var(--navy);
-  position:relative;
-}
-.hiw-inner{max-width:1200px;margin:auto}
-.hiw-header{text-align:center;margin-bottom:72px}
+───────────────────────────────────── */
+#hiw{background:var(--navy);position:relative}
 
-.hiw-steps{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:24px;position:relative;
+.hiw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}
+.hiw-grid::before{
+  content:'';position:absolute;top:42px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);
+  height:1px;background:linear-gradient(90deg,var(--teal),rgba(14,165,233,.15));opacity:.25;
 }
-.hiw-steps::before{
-  content:'';position:absolute;
-  top:30px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);
-  height:1px;
-  background:linear-gradient(to right,transparent,var(--teal),transparent);
-  opacity:.3;
-}
-
 .step-card{
   text-align:center;padding:36px 24px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  position:relative;
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-lg);
+  position:relative;transition:border-color .25s,transform .25s;
 }
-.step-num{
+.step-card:hover{border-color:var(--border-hi);transform:translateY(-4px)}
+.step-n{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
   background:linear-gradient(135deg,var(--teal),var(--cyan));
-  color:white;
-  width:28px;height:28px;border-radius:100px;
-  font-family:var(--mono);font-size:.75rem;font-weight:700;
+  color:#fff;width:28px;height:28px;border-radius:100px;
+  font-family:var(--mono);font-size:.75rem;font-weight:600;
   display:flex;align-items:center;justify-content:center;
 }
 .step-icon{
   width:56px;height:56px;border-radius:14px;
-  background:var(--teal-dim);border:1px solid var(--border-hi);
-  display:flex;align-items:center;justify-content:center;
-  margin:16px auto 20px;
+  background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.16);
+  display:flex;align-items:center;justify-content:center;margin:12px auto 18px;
 }
-.step-icon svg{width:24px;height:24px;stroke:var(--teal);stroke-width:2}
-.step-card h3{font-size:.95rem;font-weight:700;margin-bottom:10px}
-.step-card p{font-size:.83rem;color:var(--text-2);line-height:1.7}
+.step-icon svg{width:24px;height:24px;stroke:var(--teal);stroke-width:2;fill:none}
+.step-card h3{font-family:var(--display);font-size:1.1rem;font-weight:700;margin-bottom:10px; letter-spacing:-0.01em;}
+.step-card p{font-size:.85rem;color:var(--text-2);line-height:1.6}
 
-/* ═══════════════════════════════════════
+/* ─────────────────────────────────────
    INDUSTRIES
-═══════════════════════════════════════ */
-.ind-section{
-  padding:100px 40px;
-  background:var(--navy-2);
-  position:relative;overflow:hidden;
-}
-.ind-inner{max-width:1200px;margin:auto;position:relative;z-index:2}
-.ind-header{text-align:center;margin-bottom:64px}
+───────────────────────────────────── */
+#industries{background:var(--navy-3);position:relative;overflow:hidden}
 
-.ind-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
+.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .ind-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;padding:32px;
-  transition:all .25s;
-  position:relative;overflow:hidden;
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px;
+  position:relative;overflow:hidden;transition:all .25s;
 }
-.ind-card::before{
-  content:'';position:absolute;
-  bottom:0;left:0;right:0;height:2px;
+.ind-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg,var(--teal),var(--cyan));
-  transform:scaleX(0);
-  transition:transform .3s;
-  transform-origin:left;
+  transform:scaleX(0);transition:transform .3s;transform-origin:left;
 }
-.ind-card:hover::before{transform:scaleX(1)}
-.ind-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.ind-card:hover::after{transform:scaleX(1)}
+.ind-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.3)}
+.ind-icon{width:48px;height:48px;border-radius:12px;background:rgba(14,165,233,.08);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.ind-icon svg{width:22px;height:22px;stroke:var(--teal);stroke-width:2;fill:none}
+.ind-card h4{font-family:var(--display);font-size:1.05rem;font-weight:700;margin-bottom:10px}
+.ind-card p{font-size:.85rem;color:var(--text-2);line-height:1.6}
+.ind-list{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.ind-list li{font-size:.8rem;font-weight:500;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.ind-list li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--teal);flex-shrink:0}
 
-.ind-icon{
-  width:48px;height:48px;border-radius:12px;
-  background:var(--teal-dim);
+/* ─────────────────────────────────────
+   FOUNDER / WHY US
+───────────────────────────────────── */
+#whyus{background:var(--navy-2);position:relative;overflow:hidden}
+#whyus::before{
+  content:'';position:absolute;left:-100px;top:50%;transform:translateY(-50%);
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(14,165,233,.04) 0%,transparent 65%);pointer-events:none;
+}
+
+.whyus-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+.founder-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:36px;
+}
+.founder-top{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.founder-av{
+  width:68px;height:68px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(14,165,233,.18),rgba(6,182,212,.08));
+  border:1px solid rgba(14,165,233,.18);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:20px;
+  font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--teal);
 }
-.ind-icon svg{width:22px;height:22px;stroke:var(--teal);stroke-width:2}
-.ind-card h4{font-size:1rem;font-weight:700;margin-bottom:10px}
-.ind-card p{font-size:.83rem;color:var(--text-2);line-height:1.7}
-.ind-card .ind-items{
-  list-style:none;margin-top:16px;
-  display:flex;flex-direction:column;gap:6px;
+.founder-name{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--white)}
+.founder-role{font-size:.8rem;color:var(--teal);font-weight:600;margin-top:4px}
+.founder-loc{font-size:.75rem;color:var(--text-3);margin-top:2px}
+
+.founder-quote{
+  font-size:.95rem;color:var(--text-2);line-height:1.6;
+  border-left:3px solid rgba(14,165,233,.3);padding-left:18px;
 }
-.ind-card .ind-items li{
-  font-size:.78rem;color:var(--text-3);
-  display:flex;align-items:center;gap:7px;
-}
-.ind-card .ind-items li::before{
-  content:'';width:4px;height:4px;border-radius:50%;
-  background:var(--teal);flex-shrink:0;
+.founder-quote strong{color:var(--text-1);font-weight:600}
+.founder-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.f-tag{
+  background:rgba(14,165,233,.07);border:1px solid rgba(14,165,233,.14);
+  color:var(--teal);font-size:.7rem;font-weight:500;font-family:var(--mono);
+  padding:4px 12px;border-radius:100px;
 }
 
-/* ═══════════════════════════════════════
-   CONTACT
-═══════════════════════════════════════ */
-#contact{
-  padding:100px 40px;
-  background:var(--navy);
+.trust-pts{display:flex;flex-direction:column;gap:16px}
+.tp{
+  display:flex;gap:18px;
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;
+  transition:border-color .2s;
+}
+.tp:hover{border-color:var(--border-hi)}
+.tp-ico{
+  width:46px;height:46px;border-radius:10px;flex-shrink:0;
+  background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.16);
+  display:flex;align-items:center;justify-content:center;
+}
+.tp-ico svg{width:20px;height:20px;stroke:var(--teal);stroke-width:2;fill:none}
+.tp-body h4{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--text-1);margin-bottom:6px}
+.tp-body p{font-size:.85rem;color:var(--text-2);line-height:1.6}
+
+/* ─────────────────────────────────────
+   MID CTA
+───────────────────────────────────── */
+.mid-cta{
+  padding:80px 44px;
+  background:linear-gradient(135deg,rgba(14,165,233,.07) 0%,rgba(6,182,212,.04) 60%,rgba(14,165,233,.06) 100%);
+  border-top:1px solid rgba(14,165,233,.1);border-bottom:1px solid rgba(14,165,233,.1);
   position:relative;overflow:hidden;
+}
+.mid-cta::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:400px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.07) 0%,transparent 65%);pointer-events:none;
+}
+.mid-cta-inner{max-width:760px;margin:auto;text-align:center;position:relative;z-index:2}
+.mid-cta-inner h2{
+  font-family:var(--display);
+  font-size:clamp(1.75rem,2.7vw,2.35rem);font-weight:800;letter-spacing:-0.02em;
+  color:var(--white);margin-bottom:14px;line-height:1.2;
+}
+.mid-cta-inner p{
+  color:var(--text-2);font-size:.95rem;line-height:1.6;
+  max-width:540px;margin-inline:auto;margin-bottom:34px;
+}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-cta-p{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 32px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+  color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;
+  box-shadow:0 10px 36px rgba(14,165,233,.32);transition:all .22s;
+}
+.btn-cta-p:hover{transform:translateY(-2px);box-shadow:0 14px 46px rgba(14,165,233,.42)}
+.btn-cta-s{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 30px;border-radius:10px;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--text-1);font-weight:600;font-size:.95rem;text-decoration:none;
+  transition:all .22s;
+}
+.btn-cta-s:hover{border-color:var(--border-hi);background:rgba(14,165,233,.04)}
+.btn-cta-p svg,.btn-cta-s svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.5;fill:none}
+.cta-micros{
+  margin-top:24px;font-size:.75rem;font-weight:500;color:var(--text-3);
+  display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;
+}
+.cta-micros span{display:flex;align-items:center;gap:6px}
+.cta-micros svg{width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none}
+
+/* ─────────────────────────────────────
+   CONTACT
+───────────────────────────────────── */
+#contact{
+  background:var(--navy);position:relative;overflow:hidden;
 }
 #contact::before{
-  content:'';position:absolute;
-  top:0;left:50%;transform:translateX(-50%);
-  width:600px;height:400px;
-  background:radial-gradient(ellipse,rgba(14,165,233,.06) 0%,transparent 70%);
-  pointer-events:none;
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:700px;height:420px;
+  background:radial-gradient(ellipse,rgba(14,165,233,.05) 0%,transparent 65%);pointer-events:none;
 }
-.contact-inner{max-width:1100px;margin:auto;position:relative;z-index:2}
-.contact-header{text-align:center;margin-bottom:64px}
-.contact-grid{
-  display:grid;grid-template-columns:1fr 1.3fr;
-  gap:60px;align-items:start;
+.contact-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:52px;align-items:start}
+.contact-left h3{
+  font-family:var(--display);font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;color:var(--white);margin-bottom:14px;
 }
-.contact-left{}
-.contact-left p{
-  color:var(--text-2);line-height:1.8;font-size:.95rem;
-  margin-top:16px;margin-bottom:36px;
-}
-.contact-methods{display:flex;flex-direction:column;gap:16px}
+.contact-left p{color:var(--text-2);line-height:1.6;font-size:.9rem;margin-bottom:30px}
+.c-methods{display:flex;flex-direction:column;gap:12px}
 .c-method{
   display:flex;align-items:center;gap:14px;
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:12px;padding:14px 18px;
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
   transition:border-color .2s;
 }
 .c-method:hover{border-color:var(--border-hi)}
-.c-icon{
-  width:38px;height:38px;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.c-icon svg{width:16px;height:16px;stroke-width:2}
-.ci-teal{background:var(--teal-dim);border:1px solid var(--border-hi)}
-.ci-teal svg{stroke:var(--teal)}
-.ci-green{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15)}
-.ci-green svg{stroke:var(--green)}
-.ci-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.15)}
-.ci-red svg{stroke:var(--red)}
-.c-method strong{display:block;font-size:.8rem;font-weight:700;color:var(--text-1);margin-bottom:1px}
-.c-method span{font-size:.8rem;color:var(--text-3)}
+.c-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.c-ico svg{width:16px;height:16px;stroke-width:2;fill:none}
+.ci-t{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.16)}.ci-t svg{stroke:var(--teal)}
+.ci-g{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.16)}.ci-g svg{stroke:var(--green)}
+.ci-r{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.16)}.ci-r svg{stroke:var(--red)}
+.c-method strong{display:block;font-size:.85rem;font-weight:600;color:var(--text-1);margin-bottom:2px}
+.c-method span{font-size:.75rem;font-weight:500;color:var(--text-3)}
 
-/* Form */
-.contact-form-wrap{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:36px;
-}
-.form-title{font-size:1rem;font-weight:700;margin-bottom:24px;color:var(--text-1)}
+.form-wrap{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:36px}
+.form-title{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--text-1);margin-bottom:24px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-group{margin-bottom:16px}
-.form-label{
-  display:block;font-size:.75rem;font-weight:700;
-  color:var(--text-2);margin-bottom:7px;
-  text-transform:uppercase;letter-spacing:.06em;
-  font-family:var(--mono);
+.f-label{
+  display:block;font-size:.7rem;font-weight:600;color:var(--text-2);
+  margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-family:var(--mono);
 }
-.form-input{
-  width:100%;padding:11px 14px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:9px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:.875rem;color:var(--text-1);
-  outline:none;
+.f-input{
+  width:100%;padding:12px 14px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;
+  font-family:var(--body);font-size:.85rem;color:var(--text-1);outline:none;
   transition:border-color .2s,box-shadow .2s,background .2s;
 }
-.form-input:focus{
-  border-color:var(--teal);
-  background:rgba(14,165,233,.05);
-  box-shadow:0 0 0 3px rgba(14,165,233,.1);
-}
-.form-input::placeholder{color:var(--text-3)}
-textarea.form-input{resize:vertical;min-height:100px}
-
-.form-select{
-  width:100%;padding:11px 14px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:9px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:.875rem;color:var(--text-1);
-  outline:none;
-  -webkit-appearance:none;
+.f-input:focus{border-color:var(--teal);background:rgba(14,165,233,.035);box-shadow:0 0 0 3px rgba(14,165,233,.08)}
+.f-input::placeholder{color:var(--text-3)}
+textarea.f-input{resize:vertical;min-height:96px}
+.f-select{
+  width:100%;padding:12px 14px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;
+  font-family:var(--body);font-size:.85rem;color:var(--text-1);outline:none;-webkit-appearance:none;
   transition:border-color .2s;
 }
-.form-select:focus{border-color:var(--teal)}
-.form-select option{background:var(--panel);color:var(--text-1)}
-
+.f-select:focus{border-color:var(--teal)}
+.f-select option{background:var(--panel);color:var(--text-1)}
 .btn-submit{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
   padding:14px;border-radius:10px;
   background:linear-gradient(135deg,var(--teal),var(--cyan));
-  color:white;font-weight:700;font-size:.95rem;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  border:none;cursor:pointer;
-  box-shadow:0 8px 24px rgba(14,165,233,.25);
-  transition:opacity .2s,transform .15s;
-  margin-top:4px;
+  color:#fff;font-weight:600;font-size:.95rem;font-family:var(--body);
+  border:none;cursor:pointer;box-shadow:0 8px 22px rgba(14,165,233,.22);
+  transition:opacity .2s,transform .15s;margin-top:8px;
 }
-.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
-.btn-submit svg{width:16px;height:16px;stroke:white;stroke-width:2.5}
+.btn-submit:hover{opacity:.88;transform:translateY(-1px)}
+.btn-submit svg{width:16px;height:16px;stroke:#fff;stroke-width:2.5;fill:none}
 
-/* ═══════════════════════════════════════
+/* ─────────────────────────────────────
    FOOTER
-═══════════════════════════════════════ */
+───────────────────────────────────── */
 footer{
-  background:var(--navy-2);
-  border-top:1px solid var(--border);
-  padding:32px 40px;
+  background:var(--navy-2);border-top:1px solid var(--border);padding:32px 44px;
 }
 .footer-inner{
-  max-width:1200px;margin:auto;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:16px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
 }
-.footer-copy{
-  font-size:.78rem;color:var(--text-3);
-}
-.footer-links{
-  display:flex;gap:24px;list-style:none;
-}
-.footer-links a{
-  font-size:.78rem;color:var(--text-3);
-  text-decoration:none;transition:color .2s;
-}
+.footer-copy{font-size:.8rem;font-weight:500;color:var(--text-3)}
+.footer-links{display:flex;gap:24px;list-style:none}
+.footer-links a{font-size:.8rem;font-weight:500;color:var(--text-3);text-decoration:none;transition:color .2s}
 .footer-links a:hover{color:var(--teal)}
-.footer-badge{
-  font-family:var(--mono);font-size:.65rem;
-  color:var(--text-3);
-  display:flex;align-items:center;gap:6px;
-}
-.footer-badge span{color:var(--teal)}
+.footer-badge{font-family:var(--mono);font-size:.65rem;color:var(--text-3);display:flex;align-items:center;gap:6px}
+.footer-badge em{color:var(--teal);font-style:normal}
 
-/* ═══════════════════════════════════════
-   INTERSECTION ANIMATIONS
-═══════════════════════════════════════ */
-.reveal{
-  opacity:0;transform:translateY(30px);
-  transition:opacity .7s ease,transform .7s ease;
-}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-left{
-  opacity:0;transform:translateX(-30px);
-  transition:opacity .7s ease,transform .7s ease;
-}
-.reveal-left.visible{opacity:1;transform:translateX(0)}
-.reveal-right{
-  opacity:0;transform:translateX(30px);
-  transition:opacity .7s ease,transform .7s ease;
-}
-.reveal-right.visible{opacity:1;transform:translateX(0)}
+/* ─────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.rl{opacity:0;transform:translateX(-24px);transition:opacity .65s ease,transform .65s ease}
+.rl.in{opacity:1;transform:translateX(0)}
+.rr{opacity:0;transform:translateX(24px);transition:opacity .65s ease,transform .65s ease}
+.rr.in{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+.d4{transition-delay:.28s}.d5{transition-delay:.35s}
 
-.stagger-1{transition-delay:.1s}
-.stagger-2{transition-delay:.2s}
-.stagger-3{transition-delay:.3s}
-.stagger-4{transition-delay:.4s}
-.stagger-5{transition-delay:.5s}
-
-/* ═══════════════════════════════════════
+/* ─────────────────────────────────────
    RESPONSIVE
-═══════════════════════════════════════ */
-@media(max-width:960px){
-  .hero-inner,.contact-grid{grid-template-columns:1fr;gap:48px}
-  .hero-visual{display:none}
-  .hero-stats{flex-wrap:wrap;gap:24px}
-  .counter-grid{grid-template-columns:repeat(2,1fr)}
-  .features-bento{grid-template-columns:1fr;grid-template-rows:auto}
-  .feat-card.featured{grid-column:span 1}
-  .hiw-steps,.ind-grid{grid-template-columns:1fr}
-  .hiw-steps::before{display:none}
-  .form-row{grid-template-columns:1fr}
+───────────────────────────────────── */
+@media(max-width:1024px){
+  nav{padding:0 22px}
   .nav-links{display:none}
+  section,#hero,.stats-strip,.logos-section,.mid-cta,footer{padding-left:22px;padding-right:22px}
+  .hero-inner,.whyus-grid,.contact-grid{grid-template-columns:1fr;gap:36px}
+  .hero-visual{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .pain-grid,.feat-bento,.hiw-grid,.ind-grid{grid-template-columns:1fr}
+  .feat-bento .feat-card.wide{grid-column:span 1}
+  .hiw-grid::before{display:none}
+  .ba-wrap{grid-template-columns:1fr;gap:14px}
+  .ba-arrow{transform:rotate(90deg);margin:0 auto}
+  .form-row{grid-template-columns:1fr}
   .footer-inner{flex-direction:column;text-align:center}
+  .demo-layout{grid-template-columns:1fr}
+  .demo-nav{display:none}
+  .dkpi-row{grid-template-columns:repeat(2,1fr)}
+  .dchart-row{grid-template-columns:1fr}
+  #hero{padding-top:130px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav id="navbar">
+<!-- ══ NAV ══ -->
+<nav id="nav">
   <a href="#hero" class="logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
-    CYNEXA<span>SYSTEM</span>
+    CYNEXA<em>SYSTEM</em>
   </a>
   <ul class="nav-links">
-    <li><a href="#hero">Home</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#industries">Industries</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#hero">Beranda</a></li>
+    <li><a href="#problem">Masalah</a></li>
+    <li><a href="#features">Solusi</a></li>
+    <li><a href="#demo">Preview</a></li>
+    <li><a href="#industries">Sektor</a></li>
+    <li><a href="#contact">Kontak</a></li>
   </ul>
   <div class="nav-actions">
-    <a href="#contact" class="btn-ghost">Login</a>
-    <a href="#contact" class="btn-nav">Free Demo</a>
+    <a href="#contact" class="btn-ghost">Masuk</a>
+    <a href="#contact" class="btn-primary-sm">Demo Gratis →</a>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
 <section id="hero">
   <div class="hero-glow-a"></div>
   <div class="hero-glow-b"></div>
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="status-pill"><div class="pulse"></div>Platform v2.4 — Now Live</div>
-      
-      <h1 class="hero-h1">Kendali Penuh <span class="h1-gradient">Operasional Industri</span> di Satu Platform</h1>
-      <p class="hero-sub">Sistem digital end-to-end untuk manufaktur dan distribusi — monitoring real-time, workflow approval, dan pelaporan otomatis yang menggantikan proses manual sepenuhnya.</p>
+  <div class="hero-inner max">
+
+    <div>
+      <div class="status-pill"><div class="pulse"></div>Platform v2.4 · Aktif Sekarang</div>
+
+      <div class="hero-eyebrow">Sistem Operasional Manufaktur &amp; Distribusi</div>
+
+      <h1 class="hero-h1">
+        Tinggalkan Laporan Kertas &amp; WA.<br>Pantau Operasional Real-Time.
+        <span class="h1-sub">Satu Sistem Digital Terpusat</span>
+      </h1>
+
+      <div class="pain-strip">
+        <span class="pain-tag">Rekap Excel Manual</span>
+        <span class="pain-tag">Approval WA Tercecer</span>
+        <span class="pain-tag">Data Produksi Telat</span>
+        <span class="pain-tag">Stok Tidak Akurat</span>
+      </div>
+
+      <p class="hero-sub">
+        Digitalisasi operasional pabrik dan gudang Anda. Pantau target produksi, kontrol stok, dan validasi approval dalam satu dashboard. <strong>Cepat, akurat, dan tanpa butuh tim IT internal.</strong>
+      </p>
+
       <div class="hero-ctas">
-        <a href="#contact" class="btn-primary">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-14 9V3z"/></svg>
-          Mulai Demo Gratis
+        <a href="#contact" class="btn-hero-primary">
+          <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Jadwalkan Demo Gratis
         </a>
-        <a href="#features" class="btn-secondary">
-          Lihat Fitur
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <a href="#problem" class="btn-hero-secondary">
+          Lihat Cara Kerjanya
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
+
       <div class="hero-stats">
-        <div class="h-stat">
-          <div class="h-stat-num"><span class="c-count" data-target="98">0</span><span>%</span></div>
-          <div class="h-stat-lbl">System Uptime</div>
+        <div>
+          <div class="hs-num"><span class="cnt" data-t="98">0</span><em>%</em></div>
+          <div class="hs-lbl">Uptime Sistem</div>
         </div>
-        <div class="h-stat">
-          <div class="h-stat-num"><span class="c-count" data-target="50">0</span><span>+</span></div>
-          <div class="h-stat-lbl">Enterprise Clients</div>
+        <div>
+          <div class="hs-num"><span class="cnt" data-t="50">0</span><em>+</em></div>
+          <div class="hs-lbl">Pabrik & Gudang Aktif</div>
         </div>
-        <div class="h-stat">
-          <div class="h-stat-num"><span class="c-count" data-target="3">0</span><span>x</span></div>
-          <div class="h-stat-lbl">Efisiensi Meningkat</div>
+        <div>
+          <div class="hs-num"><span class="cnt" data-t="3">0</span><em>×</em></div>
+          <div class="hs-lbl">Proses Lebih Cepat</div>
         </div>
       </div>
     </div>
 
+    <!-- Dashboard mockup -->
     <div class="hero-visual">
-      <div class="notif notif-1">
-        <div class="notif-icon ni-green">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <div class="notif-val">Produksi Normal</div>
-          <div class="notif-sub">Line A · 2 menit lalu</div>
-        </div>
+      <div class="notif n1">
+        <div class="n-icon ni-g"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="n-val">Produksi Sesuai Target</div><div class="n-sub">Line A · 2 menit lalu</div></div>
       </div>
-
       <div class="dash-shell">
-        <div class="dash-topbar">
-          <div class="dash-dots">
-            <div class="dot dot-r"></div>
-            <div class="dot dot-a"></div>
-            <div class="dot dot-g"></div>
-          </div>
-          <div class="dash-title-bar">cynexa.dashboard · production</div>
-          <div class="dash-live-chip">
-            <div class="pulse" style="width:5px;height:5px;background:var(--green)"></div> LIVE
-          </div>
+        <div class="dash-bar">
+          <div class="dots"><div class="dot d-r"></div><div class="dot d-a"></div><div class="dot d-g"></div></div>
+          <div class="bar-title">cynexa · production dashboard</div>
+          <div class="live-badge"><div class="pulse"></div>LIVE</div>
         </div>
         <div class="dash-body">
           <div class="kpi-row">
-            <div class="kpi">
-              <div class="kpi-lbl">Output / Hari</div>
-              <div class="kpi-val">2,847</div>
-              <div class="kpi-delta up">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                +12.4%
-              </div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-lbl">Pending</div>
-              <div class="kpi-val">14</div>
-              <div class="kpi-delta warn">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                3 urgent
-              </div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-lbl">Efisiensi</div>
-              <div class="kpi-val">91%</div>
-              <div class="kpi-delta up">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                +3.1%
-              </div>
+            <div class="kpi"><div class="kpi-l">Output Shift Ini</div><div class="kpi-v">2,847</div><div class="kpi-d up"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>+12.4%</div></div>
+            <div class="kpi"><div class="kpi-l">Pending Approval</div><div class="kpi-v">14</div><div class="kpi-d warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>3 urgent</div></div>
+            <div class="kpi"><div class="kpi-l">Efisiensi Mesin</div><div class="kpi-v">91%</div><div class="kpi-d up"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>+3.1%</div></div>
+          </div>
+          <div class="chart-box">
+            <div class="ch-head"><span class="ch-name">Trend Output — 7 Hari</span><span class="ch-per">Mar '26</span></div>
+            <div class="bars">
+              <div class="bar-col" style="height:58%"></div><div class="bar-col" style="height:72%"></div>
+              <div class="bar-col" style="height:51%"></div><div class="bar-col" style="height:80%"></div>
+              <div class="bar-col" style="height:67%"></div><div class="bar-col" style="height:87%"></div>
+              <div class="bar-col hi" style="height:100%"></div>
             </div>
           </div>
-
-          <div class="chart-area">
-            <div class="chart-header">
-              <span class="chart-name">Output Produksi – 7 Hari</span>
-              <span class="chart-period">Mar '26</span>
-            </div>
-            <div class="bar-chart">
-              <div class="bar" style="height:60%"></div>
-              <div class="bar" style="height:75%"></div>
-              <div class="bar" style="height:55%"></div>
-              <div class="bar" style="height:80%"></div>
-              <div class="bar" style="height:70%"></div>
-              <div class="bar" style="height:90%"></div>
-              <div class="bar active" style="height:100%"></div>
-            </div>
-          </div>
-
-          <div class="prog-list">
-            <div class="prog-item">
-              <div class="prog-row">
-                <span class="prog-name">Line Production A</span>
-                <span class="prog-pct">87%</span>
-              </div>
-              <div class="prog-track"><div class="prog-fill" style="width:87%"></div></div>
-            </div>
-            <div class="prog-item">
-              <div class="prog-row">
-                <span class="prog-name">Delivery Fulfillment</span>
-                <span class="prog-pct">94%</span>
-              </div>
-              <div class="prog-track"><div class="prog-fill" style="width:94%"></div></div>
-            </div>
+          <div class="prog-rows">
+            <div class="prow"><div class="pr-top"><span class="pr-name">Line Production A</span><span class="pr-pct">87%</span></div><div class="pr-track"><div class="pr-fill" style="width:87%"></div></div></div>
+            <div class="prow"><div class="pr-top"><span class="pr-name">Target Pengiriman Harian</span><span class="pr-pct">94%</span></div><div class="pr-track"><div class="pr-fill" style="width:94%"></div></div></div>
           </div>
         </div>
       </div>
-
-      <div class="notif notif-2">
-        <div class="notif-icon ni-amber">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <div class="notif-val">Stok Menipis</div>
-          <div class="notif-sub">Material B · 14 unit left</div>
-        </div>
+      <div class="notif n2">
+        <div class="n-icon ni-a"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="n-val">Stok Hampir Habis</div><div class="n-sub">Material B · 14 unit tersisa</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── ANIMATED COUNTER STRIP ── -->
-<div class="counter-strip">
-  <div class="counter-grid">
-    <div class="counter-item reveal stagger-1">
-      <div class="counter-num"><span class="c-count" data-target="98" data-suffix="%">0</span></div>
-      <div class="counter-lbl">System Uptime SLA</div>
-    </div>
-    <div class="counter-item reveal stagger-2" style="position:relative">
-      <div class="counter-divider"></div>
-      <div class="counter-num"><span class="c-count" data-target="50" data-suffix="+">0</span></div>
-      <div class="counter-lbl">Enterprise Clients</div>
-    </div>
-    <div class="counter-item reveal stagger-3" style="position:relative">
-      <div class="counter-divider"></div>
-      <div class="counter-num"><span class="c-count" data-target="250" data-suffix="K+">0</span></div>
-      <div class="counter-lbl">Transaksi Diproses / Bulan</div>
-    </div>
-    <div class="counter-item reveal stagger-4" style="position:relative">
-      <div class="counter-divider"></div>
-      <div class="counter-num"><span class="c-count" data-target="5" data-suffix="yr">0</span></div>
-      <div class="counter-lbl">Pengalaman Industri</div>
-    </div>
+<!-- ══ STATS ══ -->
+<div class="stats-strip">
+  <div class="stats-grid max">
+    <div class="stat-item reveal d1"><div class="stat-num"><span class="cnt" data-t="98" data-s="%">0%</span></div><div class="stat-lbl">Uptime Server</div></div>
+    <div class="stat-item reveal d2"><div class="stat-num"><span class="cnt" data-t="50" data-s="+">0+</span></div><div class="stat-lbl">Klien Industri Aktif</div></div>
+    <div class="stat-item reveal d3"><div class="stat-num"><span class="cnt" data-t="250" data-s="K+">0K+</span></div><div class="stat-lbl">Transaksi / Bulan</div></div>
+    <div class="stat-item reveal d4"><div class="stat-num"><span class="cnt" data-t="5" data-s="+ Th">0</span></div><div class="stat-lbl">Pengalaman Industri</div></div>
   </div>
 </div>
 
-<!-- ── TRUST SECTION ── -->
-<div class="trust-section">
-  <div class="trust-inner">
-    <div class="trust-label">Dipercaya oleh Perusahaan Industri Terkemuka</div>
+<!-- ══════════════════════════════════════
+     PROBLEM
+═══════════════════════════════════════ -->
+<section id="problem">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-red">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kendala Lapangan
+      </div>
+      <h2 class="sh2 reveal">Masalahnya Selalu Sama:<br>Proses Manual Menghambat Target</h2>
+      <p class="sub reveal d1">Operasional melambat bukan karena kurang orang, tapi karena sistem kerja yang masih manual dan tersebar di mana-mana.</p>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-card reveal d1">
+        <div class="pain-seq">Kendala 01</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Laporan Kertas &amp; Excel Rawan Salah</h3>
+        <p>Operator sibuk isi form kertas, lalu diinput ulang ke Excel. Data sering salah ketik, tercecer, dan makan waktu lama hanya untuk disetor ke manajemen.</p>
+      </div>
+      <div class="pain-card reveal d2">
+        <div class="pain-seq">Kendala 02</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Approval WA Sulit Dilacak</h3>
+        <p>Izin lembur, work order, atau request material di-acc lewat chat WA. Sangat sulit dilacak dan tidak ada bukti audit yang kuat saat muncul masalah di kemudian hari.</p>
+      </div>
+      <div class="pain-card reveal d3">
+        <div class="pain-seq">Kendala 03</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Data Produksi Selalu Telat</h3>
+        <p>Kendala di mesin jam 9 pagi baru ketahuan direktur jam 4 sore lewat rekap harian. Keputusan menjadi sangat lambat karena data tidak up-to-date.</p>
+      </div>
+      <div class="pain-card reveal d1">
+        <div class="pain-seq">Kendala 04</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Kontrol Stok Berantakan</h3>
+        <p>Material habis di tengah jalan tanpa aba-aba. Mesin terpaksa berhenti menunggu bahan baku datang, membuat target produksi harian meleset total.</p>
+      </div>
+      <div class="pain-card reveal d2">
+        <div class="pain-seq">Kendala 05</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Data Tersebar, Susah Direkap</h3>
+        <p>Data produksi ada di Excel, stok di buku catatan, laporan perbaikan di email. Admin harus lembur berjam-jam cuma buat menarik satu laporan utuh.</p>
+      </div>
+      <div class="pain-card reveal d3">
+        <div class="pain-seq">Kendala 06</div>
+        <div class="pain-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Minim Visibilitas Lapangan</h3>
+        <p>Untuk cek progres, supervisor harus keliling jalan kaki meninjau tiap lini produksi. Saat manajemen tidak ada di lokasi, tidak ada yang tahu kondisi pasti pabrik.</p>
+      </div>
+    </div>
+
+    <!-- BEFORE / AFTER -->
+    <div class="ba-wrap reveal">
+      <div class="ba-col col-before">
+        <div class="ba-head">⚠ Sebelum Pakai Sistem</div>
+        <ul class="ba-list">
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Isi laporan di kertas, difoto, dikirim ke grup WA</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Approval numpuk di chat, tidak ada bukti audit</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Masalah di lapangan telat ditangani atasan</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Admin pusing rekap Excel tiap akhir bulan</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Stok material habis tiba-tiba, mesin berhenti</li>
+        </ul>
+      </div>
+      <div class="ba-arrow">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="ba-col col-after">
+        <div class="ba-head">✓ Setelah Pakai Cynexa</div>
+        <ul class="ba-list">
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Input data langsung dari HP/Tablet di lapangan</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Approval otomatis tersimpan dengan rekam jejak jelas</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dashboard produksi real-time, pantau dari mana saja</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Laporan otomatis jadi dan terkirim ke email manajemen</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sistem memberi notifikasi sebelum material habis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOGOS ══ -->
+<div class="logos-section">
+  <div class="max">
+    <div class="logos-label">Dipercaya oleh Perusahaan Industri di Indonesia</div>
     <div class="logo-row">
-      <div class="trust-logo">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        PT. MANUFAKTUR PRIMA
-      </div>
-      <div class="trust-logo">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        NUSANTARA LOGISTIK
-      </div>
-      <div class="trust-logo">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V10l8-6 8 6v10M10 20v-6h4v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        INDONESIA INDUSTRIAL
-      </div>
-      <div class="trust-logo">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        TEKNO DISTRIBUSI
-      </div>
-      <div class="trust-logo">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        PRODUKSI NUSANTARA
-      </div>
+      <div class="tlogo"><svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" stroke-linecap="round" stroke-linejoin="round"/></svg>PT. MANUFAKTUR PRIMA</div>
+      <div class="tlogo"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>NUSANTARA LOGISTIK</div>
+      <div class="tlogo"><svg viewBox="0 0 24 24"><path d="M2 20h20M4 20V10l8-6 8 6v10M10 20v-6h4v6" stroke-linecap="round" stroke-linejoin="round"/></svg>INDONESIA INDUSTRIAL</div>
+      <div class="tlogo"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>TEKNO DISTRIBUSI</div>
+      <div class="tlogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>PRODUKSI NUSANTARA</div>
     </div>
     <div class="trust-badges">
-      <div class="t-badge reveal stagger-1">
-        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
-        <div class="t-badge-text">
-          <strong>ISO 27001 Ready</strong>
-          <span>Data Security Certified</span>
-        </div>
-      </div>
-      <div class="t-badge reveal stagger-2">
-        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
-        <div class="t-badge-text">
-          <strong>99.9% Uptime SLA</strong>
-          <span>Enterprise Grade Infra</span>
-        </div>
-      </div>
-      <div class="t-badge reveal stagger-3">
-        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
-        <div class="t-badge-text">
-          <strong>Dedicated Support</strong>
-          <span>24/7 Technical Team</span>
-        </div>
-      </div>
-      <div class="t-badge reveal stagger-4">
-        <div class="t-badge-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" stroke-width="2"/></svg></div>
-        <div class="t-badge-text">
-          <strong>On-Premise Option</strong>
-          <span>Full Data Control</span>
-        </div>
-      </div>
+      <div class="tbadge reveal d1"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Keamanan Data</strong><span>ISO 27001 Ready</span></div></div>
+      <div class="tbadge reveal d2"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Infrastruktur Solid</strong><span>99.9% Server Uptime</span></div></div>
+      <div class="tbadge reveal d3"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Full Support</strong><span>Tim Teknis 24/7</span></div></div>
+      <div class="tbadge reveal d4"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Tersedia On-Premise</strong><span>Kontrol 100% di Anda</span></div></div>
     </div>
   </div>
 </div>
 
-<!-- ── ENTERPRISE FEATURES STRIP ── -->
-<section id="features" class="features-strip">
-  <div class="features-inner">
-    <div class="features-header">
-      <div class="section-chip">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Enterprise Features
+<!-- ══════════════════════════════════════
+     FEATURES 
+═══════════════════════════════════════ -->
+<section id="features">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-teal">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Modul Sistem Terintegrasi
       </div>
-      <h2 class="section-h2 reveal">Semua yang Anda Butuhkan<br>untuk Operasional Industri</h2>
-      <p class="section-sub reveal stagger-1">Dibangun khusus untuk tantangan nyata di lantai pabrik dan rantai distribusi — bukan solusi generik.</p>
+      <h2 class="sh2 reveal">Satu Platform untuk<br>Semua Kebutuhan Operasional</h2>
+      <p class="sub reveal d1">Fitur yang dibangun spesifik untuk mengatasi birokrasi dan kendala di lapangan industri.</p>
     </div>
 
-    <div class="features-bento">
-      <div class="feat-card featured reveal reveal-left">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M2 12h20M12 2v20M5 5l14 14M19 5L5 19" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="feat-bento">
+      <!-- Wide card: flagship feature -->
+      <div class="feat-card wide reveal rl">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7v7h-7z" opacity=".35"/></svg></div>
+        <div class="feat-result">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Pantau Tanpa Harus Turun Lapangan
         </div>
-        <h3>Real-Time Operations Dashboard</h3>
-        <p>Visualisasi seluruh lini produksi, performa tim, dan KPI operasional dalam satu layar. Data diperbarui setiap detik dari sensor dan input field team.</p>
+        <h3>Production Control Dashboard</h3>
+        <p>Pantau seluruh lini produksi, status mesin, dan pencapaian target output per jam. Data ter-update setiap detik langsung dari lapangan ke layar komputer atau smartphone Anda.</p>
         <div class="feat-tags">
-          <span class="feat-tag">LIVE DATA</span>
-          <span class="feat-tag">MULTI-SITE</span>
-          <span class="feat-tag">CUSTOM KPI</span>
-          <span class="feat-tag">EXPORT</span>
+          <span class="ftag">REAL-TIME</span><span class="ftag">MULTI-LINE</span>
+          <span class="ftag">CUSTOM KPI</span><span class="ftag">EXPORT EXCEL</span>
         </div>
       </div>
 
-      <div class="feat-card reveal stagger-2">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-result">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Tinggalkan Approval Chat WA
         </div>
-        <h3>Digital Workflow & Approval</h3>
-        <p>Multi-level approval flow untuk laporan, work order, dan permintaan operasional dengan notifikasi otomatis dan jejak audit lengkap.</p>
-        <div class="feat-tags">
-          <span class="feat-tag">MULTI-LEVEL</span>
-          <span class="feat-tag">AUDIT TRAIL</span>
-        </div>
+        <h3>Digital Workflow &amp; Approval</h3>
+        <p>Semua request lembur, order material, atau work order disetujui melalui sistem. Sangat jelas rekam jejaknya: siapa yang ACC, kapan waktunya, dan alasannya.</p>
+        <div class="feat-tags"><span class="ftag">MULTI-LEVEL</span><span class="ftag">AUDIT TRAIL</span></div>
       </div>
 
-      <div class="feat-card reveal stagger-1">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feat-card reveal d1">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-result">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cegah Mesin Mati Tiba-Tiba
         </div>
-        <h3>Inventory Intelligence</h3>
-        <p>Pantau stok material, produk jadi, dan komponen secara real-time. Alert otomatis ketika stok mendekati minimum threshold.</p>
-        <div class="feat-tags">
-          <span class="feat-tag">AUTO ALERT</span>
-          <span class="feat-tag">REORDER</span>
-        </div>
+        <h3>Inventory Control &amp; Alerts</h3>
+        <p>Sistem otomatis mengirim notifikasi (warning) ke tim purchasing ketika stok material mendekati batas minimum. Order ulang jauh sebelum produksi terganggu.</p>
+        <div class="feat-tags"><span class="ftag">AUTO ALERT</span><span class="ftag">REORDER LOG</span></div>
       </div>
 
-      <div class="feat-card reveal stagger-3">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-result">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Bebaskan Admin dari Rekap Manual
         </div>
         <h3>Automated Reporting</h3>
-        <p>Laporan harian, mingguan, dan bulanan yang ter-generate otomatis dan terkirim ke stakeholder sesuai jadwal.</p>
-        <div class="feat-tags">
-          <span class="feat-tag">PDF / EXCEL</span>
-          <span class="feat-tag">SCHEDULED</span>
-        </div>
+        <p>Laporan shift, harian, dan bulanan ter-generate otomatis dari data aktual. File PDF atau Excel dikirim otomatis ke email atasan sesuai jadwal.</p>
+        <div class="feat-tags"><span class="ftag">PDF / EXCEL</span><span class="ftag">TERJADWAL</span></div>
       </div>
 
-      <div class="feat-card reveal stagger-4">
-        <div class="feat-icon">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feat-card reveal d4">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-result">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--green);stroke-width:2.5;fill:none"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Input Data Langsung dari HP
         </div>
-        <h3>Mobile Field Access</h3>
-        <p>Tim lapangan bisa input data, lihat instruksi kerja, dan submit laporan langsung dari smartphone tanpa perlu kembali ke kantor.</p>
-        <div class="feat-tags">
-          <span class="feat-tag">PWA</span>
-          <span class="feat-tag">OFFLINE MODE</span>
+        <h3>Mobile Access untuk Operator</h3>
+        <p>Operator lapangan atau teknisi bisa langsung memasukkan data produksi dan inspeksi lewat HP/tablet. Ada mode offline jika sinyal pabrik tidak stabil.</p>
+        <div class="feat-tags"><span class="ftag">PWA</span><span class="ftag">OFFLINE MODE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     DEMO PREVIEW 
+═══════════════════════════════════════ -->
+<section id="demo">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-teal">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Live Preview
+      </div>
+      <h2 class="sh2 reveal">Tampilan Asli Dashboard Cynexa<br><span class="accent">yang Dipakai di Klien Kami</span></h2>
+      <p class="sub reveal d1">Klik tab di bawah untuk melihat antarmuka modul. Desain rapi, bersih, dan sangat gampang dipahami oleh staf lapangan.</p>
+    </div>
+
+    <div class="demo-tabs">
+      <button class="dtab active" data-target="prod" onclick="switchDemo('prod')">📊 Production Dashboard</button>
+      <button class="dtab" data-target="appr" onclick="switchDemo('appr')">✅ Approval Center</button>
+      <button class="dtab" data-target="inv" onclick="switchDemo('inv')">📦 Inventory Monitor</button>
+    </div>
+
+    <div class="demo-shell reveal">
+      <div class="demo-topbar">
+        <div class="dots"><div class="dot d-r"></div><div class="dot d-a"></div><div class="dot d-g"></div></div>
+        <div class="demo-url" id="durl">app.cynexasystem.com/dashboard/production</div>
+        <div class="demo-conn"><div class="pulse" style="width:5px;height:5px;background:var(--green)"></div>Live</div>
+      </div>
+      <div class="demo-layout">
+        <div class="demo-nav">
+          <div class="dnav-grp">
+            <div class="dnav-lbl">Overview</div>
+            <div class="dnav-item on" data-target="prod" onclick="switchDemo('prod')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+            <div class="dnav-item"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" stroke-linecap="round" stroke-linejoin="round"/></svg>Analytics</div>
+          </div>
+          <div class="dnav-grp">
+            <div class="dnav-lbl">Operasional</div>
+            <div class="dnav-item"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>Work Orders</div>
+            <div class="dnav-item" data-target="appr" onclick="switchDemo('appr')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>Approvals</div>
+            <div class="dnav-item" data-target="inv" onclick="switchDemo('inv')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>Inventori</div>
+          </div>
+          <div class="dnav-grp">
+            <div class="dnav-lbl">Operasional</div>
+            <div class="dnav-item"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>Work Orders</div>
+            <div class="dnav-item" data-target="appr"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg>Approvals</div>
+            <div class="dnav-item" data-target="inv"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>Inventori</div>
+          </div>
+          <div class="dnav-grp">
+            <div class="dnav-lbl">Laporan</div>
+            <div class="dnav-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6" stroke-linecap="round" stroke-linejoin="round"/></svg>Laporan Harian</div>
+            <div class="dnav-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round" stroke-linejoin="round"/></svg>Kalender</div>
+          </div>
+        </div>
+        <div class="demo-main" id="dmain">
+          <!-- default: production -->
+          <div class="demo-main-head">
+            <span class="dpage-title">Production Dashboard · Shift Pagi</span>
+            <div class="dactions"><button class="dbtn dbtn-ghost">Export</button><button class="dbtn dbtn-primary">+ Input Data</button></div>
+          </div>
+          <div class="dkpi-row">
+            <div class="dkpi"><div class="dkpi-l">Output Hari Ini</div><div class="dkpi-v">2,847</div><div class="dkpi-s up"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>+12.4% vs kemarin</div></div>
+            <div class="dkpi"><div class="dkpi-l">Efisiensi Line</div><div class="dkpi-v">91.3%</div><div class="dkpi-s up"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>+3.1% vs target</div></div>
+            <div class="dkpi"><div class="dkpi-l">Pending Approval</div><div class="dkpi-v">14</div><div class="dkpi-s warn"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>3 urgent</div></div>
+            <div class="dkpi"><div class="dkpi-l">Downtime Hari Ini</div><div class="dkpi-v">23 min</div><div class="dkpi-s up"><svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>−40% vs rata-rata</div></div>
+          </div>
+          <div class="dchart-row">
+            <div class="dchart"><div class="dchart-title">Output per Jam — Shift Pagi</div><div class="dbars"><div class="dbar" style="height:44%"></div><div class="dbar" style="height:60%"></div><div class="dbar" style="height:53%"></div><div class="dbar" style="height:78%"></div><div class="dbar" style="height:68%"></div><div class="dbar" style="height:85%"></div><div class="dbar hi" style="height:100%"></div><div class="dbar" style="height:88%"></div></div></div>
+            <div class="dchart"><div class="dchart-title">Status Lini Produksi</div><div class="dlist"><div class="dlist-row"><span class="dlist-name">Line A</span><span class="dbadge dok">RUNNING</span></div><div class="dlist-row"><span class="dlist-name">Line B</span><span class="dbadge dok">RUNNING</span></div><div class="dlist-row"><span class="dlist-name">Line C</span><span class="dbadge dwarn">STANDBY</span></div><div class="dlist-row"><span class="dlist-name">Line D</span><span class="dbadge dok">RUNNING</span></div></div></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
-<section class="hiw-section">
-  <div class="hiw-inner">
-    <div class="hiw-header">
-      <div class="section-chip">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Process
+<!-- ══ HOW IT WORKS ══ -->
+<section id="hiw">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-teal">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Proses Onboarding
       </div>
-      <h2 class="section-h2 reveal">Mulai dalam 3 Langkah Sederhana</h2>
-      <p class="section-sub reveal stagger-1">Dari onboarding hingga go-live, tim kami mendampingi setiap tahap implementasi.</p>
+      <h2 class="sh2 reveal">Siap Pakai dalam 3 Langkah<br>(Tanpa Tim IT)</h2>
+      <p class="sub reveal d1">Kami yang mengurus semua setup, konfigurasi, dan migrasi teknisnya. Tim Anda hanya perlu fokus pada perbaikan operasional lapangan.</p>
     </div>
-    <div class="hiw-steps">
-      <div class="step-card reveal stagger-1">
-        <div class="step-num">01</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Discovery & Mapping</h3>
-        <p>Tim kami memetakan alur operasional, pain points, dan kebutuhan spesifik perusahaan Anda dalam sesi konsultasi mendalam.</p>
+    <div class="hiw-grid">
+      <div class="step-card reveal d1">
+        <div class="step-n">01</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Diskusi Kebutuhan</h3>
+        <p>Kami akan memetakan SOP, alur operasional, dan sumber masalah di pabrik Anda. Meeting singkat via online, gratis tanpa paksaan beli.</p>
       </div>
-      <div class="step-card reveal stagger-2">
-        <div class="step-num">02</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Setup & Konfigurasi</h3>
-        <p>Sistem dikonfigurasi sesuai struktur organisasi, alur approval, dan metrik yang relevan — tanpa coding dari sisi Anda.</p>
+      <div class="step-card reveal d2">
+        <div class="step-n">02</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Setup &amp; Konfigurasi</h3>
+        <p>Kami sesuaikan sistem persis dengan struktur organisasi, jabatan, dan metrik perusahaan Anda. Bebas repot, terima beres.</p>
       </div>
-      <div class="step-card reveal stagger-3">
-        <div class="step-num">03</div>
-        <div class="step-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Go-Live & Support</h3>
-        <p>Pelatihan tim, migrasi data, dan monitoring aktif selama 30 hari pertama untuk memastikan adopsi berjalan mulus.</p>
+      <div class="step-card reveal d3">
+        <div class="step-n">03</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Go-Live &amp; Training</h3>
+        <p>Kami ajarkan operator Anda dari nol sampai bisa memakai sistemnya lancar. Termasuk pendampingan intensif selama 30 hari pertama.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── INDUSTRIES ── -->
-<section id="industries" class="ind-section">
-  <div class="ind-inner">
-    <div class="ind-header">
-      <div class="section-chip">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Industries
+<!-- ══ INDUSTRIES ══ -->
+<section id="industries">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-teal">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sektor Kami
       </div>
-      <h2 class="section-h2 reveal">Dirancang untuk Industri Anda</h2>
-      <p class="section-sub reveal stagger-1">Solusi kami sudah terbukti di berbagai sektor industri di Indonesia.</p>
+      <h2 class="sh2 reveal">Disesuaikan untuk Sektor Anda</h2>
+      <p class="sub reveal d1">Tidak ada modul mubazir. Cynexa disiapkan spesifik untuk kebutuhan manufaktur, logistik, dan servis industrial B2B.</p>
     </div>
     <div class="ind-grid">
-      <div class="ind-card reveal stagger-1">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M2 20h20M4 20V10M20 20V10M12 20V4M8 20v-6M16 20v-6M4 10V6l4-2 4 2 4-2 4 2v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h4>Manufacturing</h4>
-        <p>Kontrol lini produksi dari dalam ruang kantor dengan data real-time dari lantai pabrik.</p>
-        <ul class="ind-items">
-          <li>Production monitoring per shift</li>
-          <li>Machine efficiency tracking</li>
-          <li>Quality control digital form</li>
-          <li>Output vs target dashboard</li>
+      <div class="ind-card reveal d1">
+        <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M2 20h20M4 20V10M20 20V10M12 20V4M8 20v-6M16 20v-6M4 10V6l4-2 4 2 4-2 4 2v4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>Manufaktur (Pabrik)</h4>
+        <p>Kontrol ketat efisiensi mesin, hasil produksi tiap shift, dan kualitas barang dalam satu dashboard tanpa menunggu besok.</p>
+        <ul class="ind-list">
+          <li>Monitor produksi per shift</li>
+          <li>Lacak efisiensi mesin & OEE</li>
+          <li>Form Quality Control (QC) Digital</li>
+          <li>Target vs Aktual Output</li>
         </ul>
       </div>
-      <div class="ind-card reveal stagger-2">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h4>Distribution & Logistics</h4>
-        <p>Visibilitas penuh rantai distribusi dari gudang hingga titik pengiriman akhir.</p>
-        <ul class="ind-items">
-          <li>Shipment tracking real-time</li>
-          <li>Warehouse management system</li>
-          <li>Driver & fleet monitoring</li>
-          <li>Delivery confirmation digital</li>
+      <div class="ind-card reveal d2">
+        <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>Distribusi &amp; Logistik</h4>
+        <p>Hilangkan kebingungan lacak barang di jalan. Pantau armada, status penerimaan barang, dan bongkar muat secara real-time.</p>
+        <ul class="ind-list">
+          <li>Tracking pengiriman real-time</li>
+          <li>Manajemen stok gudang mutasi</li>
+          <li>Konfirmasi penerimaan digital</li>
+          <li>Monitor jam kerja driver</li>
         </ul>
       </div>
-      <div class="ind-card reveal stagger-3">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
+      <div class="ind-card reveal d3">
+        <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h4>Industrial Services</h4>
-        <p>Digitalisasi work order, jadwal preventif maintenance, dan laporan teknisi lapangan.</p>
-        <ul class="ind-items">
-          <li>Work order management</li>
-          <li>Preventive maintenance schedule</li>
-          <li>Field technician mobile app</li>
-          <li>SLA tracking & reporting</li>
+        <p>Kelola jadwal maintenance, lacak tiket perbaikan (Work Order), dan permudah teknisi lapangan input laporan kunjungan.</p>
+        <ul class="ind-list">
+          <li>Manajemen Work Order (WO)</li>
+          <li>Jadwal Preventive Maintenance</li>
+          <li>Akses mobile untuk Teknisi</li>
+          <li>Report SLA (Service Level Agreement)</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ── -->
-<section id="contact">
-  <div class="contact-inner">
-    <div class="contact-header">
-      <div class="section-chip">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Contact
+<!-- ══════════════════════════════════════
+     WHY US
+═══════════════════════════════════════ -->
+<section id="whyus">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-green">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Mengapa Cynexa
       </div>
-      <h2 class="section-h2 reveal">Siap Memulai Transformasi Digital?</h2>
-      <p class="section-sub reveal stagger-1">Konsultasi gratis, tanpa komitmen. Tim kami akan menghubungi Anda dalam 1×24 jam.</p>
+      <h2 class="sh2 reveal">Dibangun oleh Praktisi Industri,<br><span class="accent">Bukan Sekadar Vendor IT Biasa</span></h2>
+      <p class="sub reveal d1">Kami tahu persis budaya kerja di pabrik. Sistem ini dibuat agar masuk akal, fungsional, dan mudah diadopsi oleh tim lapangan Anda.</p>
+    </div>
+
+    <div class="whyus-grid">
+      <div class="founder-card rl reveal">
+        <div class="founder-top">
+          <div class="founder-av">CY</div>
+          <div>
+            <div class="founder-name">Tim Cynexa System</div>
+            <div class="founder-role">Industrial Operations Specialist</div>
+            <div class="founder-loc">Tangerang, Banten · Indonesia</div>
+          </div>
+        </div>
+        <p class="founder-quote">
+          "Cynexa lahir dari rasa frustasi nyata di lapangan. Dulu kami pusing mengurus <strong>rekap Excel yang selalu telat, persetujuan kerja (WO) yang hilang di tumpukan chat WA, dan masalah pabrik yang baru ketahuan besok harinya</strong>. Kami ciptakan Cynexa supaya operasional pabrik bisa benar-benar terpantau, dengan cara kerja yang disukai orang lapangan."
+        </p>
+        <div class="founder-tags">
+          <span class="f-tag">PRAKTISI MANUFAKTUR</span>
+          <span class="f-tag">LOGISTIK & SCM</span>
+          <span class="f-tag">BERBASIS DI INDONESIA</span>
+        </div>
+      </div>
+
+      <div class="trust-pts rr reveal">
+        <div class="tp">
+          <div class="tp-ico"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="tp-body">
+            <h4>Paham Kondisi Pabrik Indonesia</h4>
+            <p>Dari struktur 3 shift, rumitnya birokrasi ACC di lapangan, hingga koneksi internet yang kadang hilang. Kami paham celahnya.</p>
+          </div>
+        </div>
+        <div class="tp">
+          <div class="tp-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="tp-body">
+            <h4>Adopsi Gampang, Terima Beres</h4>
+            <p>Perusahaan Anda tidak wajib punya divisi IT. Semua server, update, setup, dan troubleshooting jadi tanggung jawab mutlak tim kami.</p>
+          </div>
+        </div>
+        <div class="tp">
+          <div class="tp-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="tp-body">
+            <h4>Support WhatsApp Langsung</h4>
+            <p>Tidak ada sistem 'tiket email' yang lambat balas. Kirim komplain atau pertanyaan via WA grup, tim teknis kami membalas langsung.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     MID CTA
+═══════════════════════════════════════ -->
+<div class="mid-cta">
+  <div class="mid-cta-inner">
+    <div class="chip chip-teal" style="margin-bottom:18px">
+      <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Sesi Meeting 30 Menit
+    </div>
+    <h2>Siap Digitalisasi Pabrik Anda?</h2>
+    <p>Kami jadwalkan diskusi online singkat. Ceritakan masalah alur kerja Anda, dan kami akan perlihatkan cara konkrit Cynexa menyelesaikannya.</p>
+    <div class="cta-btns">
+      <a href="#contact" class="btn-cta-p">
+        <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Jadwalkan Diskusi Gratis
+      </a>
+      <a href="https://wa.me/6281383179209" class="btn-cta-s">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Chat ke WhatsApp
+      </a>
+    </div>
+    <div class="cta-micros">
+      <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Gratis, murni konsultasi</span>
+      <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Terima Beres (No IT)</span>
+      <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Setup 2–4 Minggu</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="max">
+    <div class="sec-header">
+      <div class="chip chip-teal">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Kontak &amp; Demo
+      </div>
+      <h2 class="sh2 reveal">Mari Ngobrol</h2>
+      <p class="sub reveal d1">Isi form singkat di bawah, atau hubungi langsung via WhatsApp. Tim kami membalas pesat Anda dalam waktu maksimal 1×24 jam.</p>
     </div>
     <div class="contact-grid">
-      <div class="contact-left reveal reveal-left">
-        <h3 class="section-h2" style="font-size:1.5rem">Hubungi Kami</h3>
-        <p>Ceritakan tantangan operasional Anda dan kami akan merancang solusi yang sesuai dengan kebutuhan industri Anda.</p>
-        <div class="contact-methods">
+      <div class="contact-left rl reveal">
+        <h3>Jalur Komunikasi Langsung</h3>
+        <p>Lebih nyaman telepon atau WA? Jangan ragu hubungi nomor di bawah. Kami siap mendengar masalah produktivitas atau sistem di lapangan Anda.</p>
+        <div class="c-methods">
           <div class="c-method">
-            <div class="c-icon ci-teal">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div>
-              <strong>Email</strong>
-              <span>info@cynexasystem.com</span>
-            </div>
+            <div class="c-ico ci-t"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><strong>Email Proposal</strong><span>info@cynexasystem.com</span></div>
           </div>
           <div class="c-method">
-            <div class="c-icon ci-green">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div>
-              <strong>WhatsApp</strong>
-              <span>+62813 8317 9209</span>
-            </div>
+            <div class="c-ico ci-g"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.9v2.02z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><strong>WhatsApp Chat</strong><span>+62 813 8317 9209</span></div>
           </div>
           <div class="c-method">
-            <div class="c-icon ci-red">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div>
-              <strong>Kantor</strong>
-              <span>Tangerang Kabupaten, Banten, ID</span>
-            </div>
+            <div class="c-ico ci-r"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><strong>Alamat Kantor</strong><span>Tangerang Kabupaten, Banten, ID</span></div>
           </div>
         </div>
       </div>
 
-      <div class="contact-form-wrap reveal reveal-right">
-        <p class="form-title">Kirim Pesan ke Tim Kami</p>
+      <div class="form-wrap rr reveal">
+        <p class="form-title">Tinggalkan Pesan, Kami Hubungi Balik</p>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Nama Lengkap</label>
-            <input type="text" class="form-input" placeholder="Diaz Wahyudi">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Perusahaan</label>
-            <input type="text" class="form-input" placeholder="PT. Nama Perusahaan">
-          </div>
+          <div class="form-group"><label class="f-label">Nama Anda</label><input type="text" class="f-input" placeholder="Misal: Budi Santoso"></div>
+          <div class="form-group"><label class="f-label">Nama Perusahaan</label><input type="text" class="f-input" placeholder="PT. ABC Manufaktur"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" placeholder="budi@perusahaan.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label">No. WhatsApp</label>
-            <input type="text" class="form-input" placeholder="+62 8xx xxxx xxxx">
-          </div>
+          <div class="form-group"><label class="f-label">Email Aktif</label><input type="email" class="f-input" placeholder="budi@perusahaan.com"></div>
+          <div class="form-group"><label class="f-label">No. WhatsApp</label><input type="text" class="f-input" placeholder="08xx xxxx xxxx"></div>
         </div>
         <div class="form-group">
-          <label class="form-label">Industri</label>
-          <select class="form-select">
-            <option value="" disabled selected>Pilih industri Anda</option>
-            <option>Manufacturing</option>
-            <option>Distribution & Logistics</option>
-            <option>Industrial Services</option>
-            <option>Lainnya</option>
+          <label class="f-label">Kategori Industri</label>
+          <select class="f-select">
+            <option value="" disabled selected>Pilih salah satu</option>
+            <option>Manufaktur Pabrik</option>
+            <option>Distribusi & Logistik</option>
+            <option>Industrial Services / Maintenance</option>
+            <option>Sektor Lainnya</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Pesan / Kebutuhan</label>
-          <textarea class="form-input" placeholder="Ceritakan tantangan operasional yang ingin Anda selesaikan..."></textarea>
+          <label class="f-label">Masalah yang Ingin Dibereskan</label>
+          <textarea class="f-input" placeholder="Contoh: Kami pusing rekap form kertas setiap ganti shift. Stok material juga sering tiba-tiba habis tanpa pemberitahuan..."></textarea>
         </div>
         <button class="btn-submit">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Kirim & Minta Demo
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Kirim Data (Minta Demo)
         </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-copy">&copy; 2024 Cynexa System · All rights reserved</div>
+  <div class="footer-inner max">
+    <div class="footer-copy">© 2026 Cynexa System · Hak Cipta Dilindungi</div>
     <ul class="footer-links">
-      <li><a href="#">Privacy Policy</a></li>
-      <li><a href="#">Terms of Service</a></li>
-      <li><a href="#">Sitemap</a></li>
+      <li><a href="#">Kebijakan Privasi</a></li>
+      <li><a href="#">Ketentuan Layanan</a></li>
+      <li><a href="#">Bantuan (FAQ)</a></li>
     </ul>
-    <div class="footer-badge">Built for <span>Industrial Excellence</span></div>
+    <div class="footer-badge">B2B Software untuk <em>Operasional Industri</em></div>
   </div>
 </footer>
 
-<!-- ── SCRIPTS ── -->
 <script>
-// Initialize Lucide icons
-lucide.createIcons();
+// Navbar scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 55), {passive:true});
 
-// ── Navbar scroll effect
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-});
+// Reveal on scroll
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in') });
+}, { threshold:.1, rootMargin:'0px 0px -36px 0px' });
+document.querySelectorAll('.reveal,.rl,.rr').forEach(el => io.observe(el));
 
-// ── Intersection Observer for reveal animations
-const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-revealEls.forEach(el => revealObserver.observe(el));
-
-// ── Animated Counters
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target);
-  const suffix = el.dataset.suffix || '';
-  const duration = 1800;
-  const start = performance.now();
-
-  function update(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    // ease out quart
-    const eased = 1 - Math.pow(1 - progress, 4);
-    const current = Math.floor(eased * target);
-    el.textContent = current + suffix;
-    if (progress < 1) requestAnimationFrame(update);
+// Counter animation
+function animCnt(el) {
+  const target = +el.dataset.t;
+  const suffix = el.dataset.s || '';
+  const dur = 1800, start = performance.now();
+  const ease = p => 1 - Math.pow(1 - p, 4);
+  const tick = now => {
+    const p = Math.min((now - start) / dur, 1);
+    el.textContent = Math.floor(ease(p) * target) + suffix;
+    if(p < 1) requestAnimationFrame(tick);
     else el.textContent = target + suffix;
-  }
-  requestAnimationFrame(update);
+  };
+  requestAnimationFrame(tick);
 }
-
-const counterEls = document.querySelectorAll('.c-count');
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && !entry.target.dataset.animated) {
-      entry.target.dataset.animated = 'true';
-      animateCounter(entry.target);
+const cio = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting && !e.target.dataset.done) {
+      e.target.dataset.done = '1';
+      animCnt(e.target);
     }
   });
-}, { threshold: 0.5 });
+}, { threshold:.5 });
+document.querySelectorAll('.cnt').forEach(el => cio.observe(el));
 
-counterEls.forEach(el => counterObserver.observe(el));
+// Demo tabs
+const demos = {
+  prod: {
+    url: 'app.cynexasystem.com/dashboard/production',
+    html: `<div class="demo-main-head"><span class="dpage-title">Production Dashboard · Shift Pagi</span><div class="dactions"><button class="dbtn dbtn-ghost">Export</button><button class="dbtn dbtn-primary">+ Input Data</button></div></div>
+    <div class="dkpi-row">
+      <div class="dkpi"><div class="dkpi-l">Output Shift Ini</div><div class="dkpi-v">2,847</div><div class="dkpi-s up"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;stroke-width:3;fill:none"><path d="M18 15l-6-6-6 6"/></svg>+12.4%</div></div>
+      <div class="dkpi"><div class="dkpi-l">Efisiensi</div><div class="dkpi-v">91.3%</div><div class="dkpi-s up"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;stroke-width:3;fill:none"><path d="M18 15l-6-6-6 6"/></svg>+3.1%</div></div>
+      <div class="dkpi"><div class="dkpi-l">Pending</div><div class="dkpi-v">14</div><div class="dkpi-s warn"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;stroke-width:3;fill:none"><path d="M12 9v4M12 17h.01"/></svg>3 urgent</div></div>
+      <div class="dkpi"><div class="dkpi-l">Total Downtime</div><div class="dkpi-v">23 min</div><div class="dkpi-s up"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;stroke-width:3;fill:none"><path d="M18 15l-6-6-6 6"/></svg>−40%</div></div>
+    </div>
+    <div class="dchart-row">
+      <div class="dchart"><div class="dchart-title">Trend Output per Jam</div><div class="dbars"><div class="dbar" style="height:44%"></div><div class="dbar" style="height:60%"></div><div class="dbar" style="height:53%"></div><div class="dbar" style="height:78%"></div><div class="dbar" style="height:68%"></div><div class="dbar" style="height:85%"></div><div class="dbar hi" style="height:100%"></div><div class="dbar" style="height:88%"></div></div></div>
+      <div class="dchart"><div class="dchart-title">Status Lini Produksi</div><div class="dlist"><div class="dlist-row"><span class="dlist-name">Line A</span><span class="dbadge dok">RUNNING</span></div><div class="dlist-row"><span class="dlist-name">Line B</span><span class="dbadge dok">RUNNING</span></div><div class="dlist-row"><span class="dlist-name">Line C</span><span class="dbadge dwarn">STANDBY</span></div><div class="dlist-row"><span class="dlist-name">Line D</span><span class="dbadge dok">RUNNING</span></div></div></div>
+    </div>`
+  },
+  appr: {
+    url: 'app.cynexasystem.com/workflow/approvals',
+    html: `<div class="demo-main-head"><span class="dpage-title">Approval Center · Butuh Review</span><div class="dactions"><button class="dbtn dbtn-ghost">Filter</button><button class="dbtn dbtn-primary">+ Buat Request</button></div></div>
+    <div class="dkpi-row">
+      <div class="dkpi"><div class="dkpi-l">Antrean Persetujuan</div><div class="dkpi-v">14</div><div class="dkpi-s warn">3 overdue</div></div>
+      <div class="dkpi"><div class="dkpi-l">Selesai Hari Ini</div><div class="dkpi-v">28</div><div class="dkpi-s up">Rata-rata 12 menit</div></div>
+      <div class="dkpi"><div class="dkpi-l">Persentase Ditolak</div><div class="dkpi-v">4.2%</div><div class="dkpi-s up">↓ vs bulan lalu</div></div>
+      <div class="dkpi"><div class="dkpi-l">SLA Sesuai Target</div><div class="dkpi-v">94%</div><div class="dkpi-s up">Target: 90%</div></div>
+    </div>
+    <div class="dchart" style="margin-bottom:0"><div class="dchart-title">Daftar Tunggu — Perlu Persetujuan Anda</div><div class="dlist" style="gap:7px">
+      <div class="dlist-row"><span class="dlist-name"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--teal);stroke-width:2;fill:none"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> WO-2024-0341 · Izin Perbaikan Mesin B</span><span class="dbadge dwarn">URGENT</span></div>
+      <div class="dlist-row"><span class="dlist-name"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--teal);stroke-width:2;fill:none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg> REQ-2024-0892 · PO Material Baku C</span><span class="dbadge dok">NORMAL</span></div>
+      <div class="dlist-row"><span class="dlist-name"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--teal);stroke-width:2;fill:none"><path d="M1 3h15v13H1z"/></svg> SHIP-2024-1203 · Pengiriman Truk ke Klien X</span><span class="dbadge dok">NORMAL</span></div>
+      <div class="dlist-row"><span class="dlist-name"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:var(--teal);stroke-width:2;fill:none"><path d="M12 9v4M12 17h.01"/></svg> RPT-2024-0445 · Laporan Kerusakan Shift 3</span><span class="dbadge dwarn">URGENT</span></div>
+    </div></div>`
+  },
+  inv: {
+    url: 'app.cynexasystem.com/inventory/monitor',
+    html: `<div class="demo-main-head"><span class="dpage-title">Inventory Control · Real-Time Dashboard</span><div class="dactions"><button class="dbtn dbtn-ghost">Export</button><button class="dbtn dbtn-primary">+ Sesuaikan Stok</button></div></div>
+    <div class="dkpi-row">
+      <div class="dkpi"><div class="dkpi-l">Total SKU</div><div class="dkpi-v">248</div><div class="dkpi-s up">Aktif dipantau</div></div>
+      <div class="dkpi"><div class="dkpi-l">Warning Stok Menipis</div><div class="dkpi-v">7</div><div class="dkpi-s warn">Wajib Order!</div></div>
+      <div class="dkpi"><div class="dkpi-l">Total Nilai Gudang</div><div class="dkpi-v">2.4M</div><div class="dkpi-s up">+8% vs kemarin</div></div>
+      <div class="dkpi"><div class="dkpi-l">Akurasi Pencatatan</div><div class="dkpi-v">99.1%</div><div class="dkpi-s up">Sesuai fisik gudang</div></div>
+    </div>
+    <div class="dchart" style="margin-bottom:0"><div class="dchart-title">Status Bahan Baku (Material Kritis)</div><div class="dlist" style="gap:7px">
+      <div class="dlist-row"><span class="dlist-name">Biji Plastik A · Sisa 1,240 karung</span><span class="dbadge dok">AMAN</span></div>
+      <div class="dlist-row"><span class="dlist-name">Bahan Kimia Pelarut · Sisa 14 drum ⚠</span><span class="dbadge dwarn">HAMPIR HABIS</span></div>
+      <div class="dlist-row"><span class="dlist-name">Karton Box Packing · Sisa 384 pack</span><span class="dbadge dok">AMAN</span></div>
+      <div class="dlist-row"><span class="dlist-name">Sparepart Mesin Potong · Sisa 2 set ⚠</span><span class="dbadge dwarn">LOW STOCK</span></div>
+    </div></div>`
+  }
+};
+
+function switchDemo(key) {
+  // Pindah active state pada Tab Utama
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  const activeTab = document.querySelector(`.dtab[data-target="${key}"]`);
+  if(activeTab) activeTab.classList.add('active');
+  
+  // Pindah active state pada Menu Sidebar Kiri
+  document.querySelectorAll('.dnav-item').forEach(nav => nav.classList.remove('on'));
+  const activeNav = document.querySelector(`.dnav-item[data-target="${key}"]`);
+  if(activeNav) activeNav.classList.add('on');
+
+  // Ubah URL palsu dan konten dashboard
+  if (demos[key]) {
+    document.getElementById('durl').textContent = demos[key].url;
+    document.getElementById('dmain').innerHTML = demos[key].html;
+  }
+}
 </script>
 </body>
 </html>
